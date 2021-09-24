@@ -1,0 +1,564 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\astrid\\astrid.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\astrid\\astrid.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\astrid\\astrid.csproj",
+        "projectName": "astrid",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\astrid\\astrid.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\astrid\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\osu.Game.Rulesets.Catch.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\osu.Game.Rulesets.Catch.csproj"
+              },
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj"
+              },
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj"
+              },
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj"
+              },
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[1.4.0-beta.3, )"
+            },
+            "Watson": {
+              "target": "Package",
+              "version": "[4.2.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\osu.Game.Rulesets.Catch.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\osu.Game.Rulesets.Catch.csproj",
+        "projectName": "ppy.osu.Game.Rulesets.Catch",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\osu.Game.Rulesets.Catch.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Catch\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Microsoft.CodeAnalysis.NetAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj",
+        "projectName": "ppy.osu.Game.Rulesets.Mania",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\osu.Game.Rulesets.Mania.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Mania\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Microsoft.CodeAnalysis.NetAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj",
+        "projectName": "ppy.osu.Game.Rulesets.Osu",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\osu.Game.Rulesets.Osu.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Osu\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Microsoft.CodeAnalysis.NetAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj",
+        "projectName": "ppy.osu.Game.Rulesets.Taiko",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\osu.Game.Rulesets.Taiko.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game.Rulesets.Taiko\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+                "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Microsoft.CodeAnalysis.NetAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj": {
+      "version": "0.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj",
+        "projectName": "ppy.osu.Game",
+        "projectPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\osu.Game.csproj",
+        "packagesPath": "C:\\Users\\James\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\James\\Desktop\\Dev\\astrid-sharp\\osu\\osu.Game\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\James\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[10.1.1, )"
+            },
+            "DiffPlex": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.36, )"
+            },
+            "Humanizer": {
+              "target": "Package",
+              "version": "[2.11.10, )"
+            },
+            "MessagePack": {
+              "target": "Package",
+              "version": "[2.3.75, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Client": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Protocols.MessagePack": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Microsoft.CodeAnalysis.BannedApiAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Microsoft.CodeAnalysis.NetAnalyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[2.2.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite.Core": {
+              "target": "Package",
+              "version": "[2.2.6, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.NETCore.Targets": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.13.2, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Realm": {
+              "target": "Package",
+              "version": "[10.5.0, )"
+            },
+            "Sentry": {
+              "target": "Package",
+              "version": "[3.9.0, )"
+            },
+            "SharpCompress": {
+              "target": "Package",
+              "version": "[0.29.0, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "ppy.LocalisationAnalyser": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2021.725.0, )"
+            },
+            "ppy.osu.Framework": {
+              "target": "Package",
+              "version": "[2021.924.0, )"
+            },
+            "ppy.osu.Game.Resources": {
+              "target": "Package",
+              "version": "[2021.918.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.7.21379.14\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
