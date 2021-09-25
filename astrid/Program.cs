@@ -15,11 +15,15 @@ namespace astrid
     class Program
     {
         static string serverMOTD = "astrid.\n\nmy shitty attempt at writing a C# bancho!";
-        //static string MySQLString = $"Server={};User ID={};Password={};Database={}";
 
         static void Main(string[] args)
         {
             Server app = new Server("127.0.0.1", 9292);
+            Config config = ConfigParser.ParseConfig();
+
+            string MySQLString = $"Server={config.SQLInfo["Server"]};User ID={config.SQLInfo["Username"]};" +
+                                 $"Password={config.SQLInfo["Password"]};Database={config.SQLInfo["Database"]}";
+
             //MySQLConnection sql = new Connection(MySQLString);
 
             app.Routes.Static.Add(HttpMethod.GET, "/", BanchoWebRoute);
