@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +74,7 @@ namespace astrid
             if (info.Count != 3)
             {
                 ctx.Response.Headers.Add("cho-token", "no");
-                await ctx.Response.Send(await Writer.UserID(-2));
+                await ctx.Response.Send(await PacketHandlers.UserID(-2));
                 return;
             }
 

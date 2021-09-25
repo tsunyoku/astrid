@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace astrid
@@ -40,6 +38,7 @@ namespace astrid
             {
                 Console.WriteLine("No config file... Creating default!");
                 File.Copy($"{route_dir}/sample_config.json", $"{route_dir}/config.json");
+                Environment.Exit(1);
             }
 
             var config_string = File.ReadAllText($"{route_dir}/config.json");
@@ -53,9 +52,6 @@ namespace astrid
     {
         public Dictionary<string, string> SQLInfo { get; set; }
 
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }

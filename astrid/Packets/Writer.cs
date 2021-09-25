@@ -1,29 +1,34 @@
-﻿using osu.Game.IO.Legacy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using osu.Game.IO.Legacy;
 
 namespace astrid.Packets
 {
-    public static class Writer
+    /// <summary>
+    /// Writer class used to write multiple packets simultaneously.
+    /// </summary>
+    public class Writer
     {
-        public static async Task<byte[]> UserID(int id)
-        {
-            var packet = new Packet
-            {
-                Type = PacketType.CHO_USER_ID
-            };
+        private readonly MemoryStream _buffer;
 
+        public Writer() => _buffer = new MemoryStream();
+
+        public async Task Write(Packet packet)
+        {
             await using (var writer = new SerializationWriter(new MemoryStream()))
             {
-                writer.Write(id);
-                packet.Data = ((MemoryStream)writer.BaseStream).ToArray();
-            }
+                writer.Write((short)packet.Type);
+                writer.Write((byte)0);
+                writer.Write(packet.Data);
 
-            return packet.Data;
+                var _base = (MemoryStream)writer.BaseStream;
+
+                _base.WriteTo(_buffer);
+            }
         }
     }
 }
