@@ -16,7 +16,9 @@ namespace astrid.Packets
             await using (var writer = new SerializationWriter(new MemoryStream()))
             {
                 writer.Write(id);
-                packet.Data = ((MemoryStream)writer.BaseStream).ToArray();
+
+                var _base = (MemoryStream)writer.BaseStream;
+                packet.Data = _base.ToArray();
             }
 
             return packet.Data;
