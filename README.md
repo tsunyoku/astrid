@@ -1,7 +1,6 @@
 # astrid
 
-entire backend emulator for osu! private servers.
-this project is private, so if you are seeing this then you are pretty cool.
+entire backend emulator for osu! private servers (python edition).
 
 astrid focuses on a few things:
 
