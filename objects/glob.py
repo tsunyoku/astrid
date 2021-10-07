@@ -23,3 +23,6 @@ clans: 'ClanCache' = None
 password_cache: 'PasswordCache' = None
 geoloc_cache: 'Cache' = None
 bot: 'Player' = None
+
+packets = {}
+restricted_packets = {}

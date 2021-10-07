@@ -157,7 +157,7 @@ class Player:
 
         for channel in self.channels: self.leave_channel(channel)
 
-        info(f"{self.name} logged out")
+        info(f"{self.name} logged out.")
 
     async def set_stats(self) -> None:
         for mode in osuModes:
@@ -250,6 +250,49 @@ class Player:
 
         info(f"{self.name} left {channel.name}")
 
+    def add_spectator(self, user: 'Player') -> None:
+        if not (spec_channel := glob.channels.get(f"#spec_{self.id}")):
+            spec_channel = Channel(
+                name="#spectator",
+                desc=f"Spectator channel for {self.name}",
+                auto_join=False,
+                permanent_channel=False
+            )
+
+            self.join_channel(spec_channel)
+            glob.channels.add_channel(spec_channel)
+
+        user.join_channel(spec_channel)
+
+        join_packet = writer.spectatorJoined(user.id)
+        for p in self.spectators:
+            p.enqueue(join_packet)
+            user.enqueue(writer.spectatorJoined(p.id))
+
+        self.spectators += user
+        user.spectating = self
+
+        self.enqueue(writer.hostSpectatorJoined(user.id))
+        info(f"{user.name} started spectating {self.name}")
+
+    def remove_spectator(self, user: 'Player') -> None:
+        self.spectators -= user
+        user.spectating = None
+
+        if not (spec_channel := glob.channels.get(f"#spec_{self.id}")): return
+        user.leave_channel(spec_channel)
+
+        if not self.spectators: self.leave_channel(spec_channel)
+        else:
+            channel_packet = writer.channelInfo(spec_channel)
+            for u in self.spectators:
+                u.enqueue(writer.spectatorLeft(user.id))
+                u.enqueue(channel_packet)
+
+            self.enqueue(channel_packet)
+
+        self.enqueue(writer.hostSpectatorLeft(user.id))
+        info(f"{user.name} stopped spectating {self.name}")
         
 
         

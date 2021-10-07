@@ -7,7 +7,7 @@ import struct
 Message = namedtuple('Message', ['from_username', 'msg', 'target_username', 'from_id'])
 Channel = namedtuple('Channel', ['name', 'desc', 'players'])
 
-types = {
+types = { # waaaaaaaaaaaaa
     osuTypes.i8: lambda rd: rd.read_i8(),
     osuTypes.u8: lambda rd: rd.read_u8(),
     osuTypes.i16: lambda rd: rd.read_i16(),
@@ -21,25 +21,26 @@ types = {
     osuTypes.message: lambda rd: rd.read_msg(),
     osuTypes.channel: lambda rd: rd.read_chan(),
     osuTypes.match: lambda rd: rd.read_match(),
-    osuTypes.i32_list: lambda rd: rd.read_i32l(),
-    osuTypes.i32_list4l: lambda rd: rd.read_i32l_4(),
+    osuTypes.i32_list: lambda rd: rd.read_i32_list(),
+    osuTypes.i32_list4l: lambda rd: rd.read_i32_4list(),
     osuTypes.string: lambda rd: rd.read_string(),
     osuTypes.raw: lambda rd: rd.read_raw()
 }
 
-def handle_packet(data: bytes, structs: tuple) -> list:
+def handle_packet(packet_data: bytes, structs: tuple) -> list:
     """Function to handle packet bytes from the client, with given types for each packet."""
 
-    reader = Reader(data)
+    reader = Reader(packet_data)
     data = []
 
     for _struct in structs:
         unpack_func = types.get(_struct, None)
 
         if not unpack_func: data += b''
-        data += unpack_func(reader)
+        else: data.append(unpack_func(reader))
 
-    return data
+    if len(data) == 1: return data[0]
+    else: return data
 
 class Reader:
     def __init__(self, data: bytes) -> None:

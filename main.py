@@ -4,9 +4,20 @@
 from xevel import Xevel
 
 # tasks
-from tasks.sql import connect_sql, disconnect_sql
-from tasks.redis import connect_redis, disconnect_redis
-from tasks.http import create_http_session, close_http_session
+from tasks.sql import (
+    connect_sql, 
+    disconnect_sql
+)
+
+from tasks.redis import (
+    connect_redis, 
+    disconnect_redis
+)
+
+from tasks.http import (
+    create_http_session, 
+    close_http_session
+)
 
 # caching
 from caching.caches import initialise_cache

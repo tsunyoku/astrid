@@ -18,11 +18,11 @@ class ChannelCache:
         """Loads all channels into cache"""
 
         channels = await glob.sql.fetch('SELECT * FROM channels')
-        for channel in channels: await self.add_channel(channel, sql=True)
+        for channel in channels: self.add_channel(channel, sql=True)
 
         debug("Cached all channels!")
 
-    async def add_channel(self, channel: Union[dict, Channel], sql: bool = False) -> None:
+    def add_channel(self, channel: Union[dict, Channel], sql: bool = False) -> None:
         if sql: channel = Channel(**channel)
         self.name_cache |= {channel.name: channel}
 

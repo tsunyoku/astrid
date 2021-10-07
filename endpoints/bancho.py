@@ -7,7 +7,7 @@ from utils.password import encrypt_password
 from utils.general import now, now_float, make_safe
 from objects.player import Player
 from utils.logging import *
-from packets import writer
+from packets import writer, handlers
 from objects import glob
 
 import uuid
@@ -27,12 +27,11 @@ BASE_WEB_MESSAGE = (
 )
 
 WELCOME_MSG = (
-    "Welcome to astrid. We have a [{glob.config.discord_server} Discord server] if you require any help.\nEnjoy!"
+    f"Welcome to astrid. We have a [{glob.config.discord_server} Discord server] if you require any help.\nEnjoy!"
 )
 
 def web_page() -> bytes:
     player_list = '\n'.join(p.name for p in glob.players.online)
-    player_list = '\n'.join([])
     return (BASE_WEB_MESSAGE + player_list).encode()
 
 @bancho_router.route("/", ["POST", "GET"])
@@ -44,12 +43,13 @@ async def bancho_client(request: Request) -> Union[tuple, bytes]:
     if not (player := glob.players.get(token=token, online=True)): return writer.restartServer(0)
 
     body = request.body
-    packet_map = {}
+    packet_map = glob.packets if not player.priv & Privileges.Disallowed else glob.restricted_packets
 
     if body[0] != 4:
         for packet, callback in packet_map.items():
-            if body[0] == packet: await callback()
-            debug(f"Packet {packet} handled for {player.name}")
+            if body[0] == packet: 
+                await callback(player, body)
+                debug(f"Packet {packet.name} handled for {player.name}")
 
     player.last_ping = now()
 
@@ -107,7 +107,7 @@ async def login(request: Request) -> bytes:
 
     if 'CF-Connecting-IP' in request.headers: ip = request.headers['CF-Connecting-IP']
     elif 'X-Forwarded-For' in request.headers: ip = request.headers['X-Forwarded-For']
-    if 'X-Real-IP' in request.headers: ip = request.headers['X-Real-IP']
+    elif 'X-Real-IP' in request.headers: ip = request.headers['X-Real-IP']
 
     if not (geoloc := glob.geoloc_cache.get(ip)):
         geoloc = geolocation_reader.city(ip)
@@ -145,7 +145,7 @@ async def login(request: Request) -> bytes:
     data += writer.channelInfoEnd()
     data += writer.menuIcon()
     data += writer.friends(player.friends)
-    data += writer.silenceEnd(0)
+    data += writer.silenceEnd(player.silence_end)
 
     if not player.priv & Privileges.Verified: 
         if player.id == 3: await player.set_priv(Privileges.Master)
@@ -164,12 +164,13 @@ async def login(request: Request) -> bytes:
 
     if not player.priv & Privileges.Restricted: glob.players.enqueue(writer.userPresence(player) + writer.userStats(player))
     for o in glob.players.online: data += writer.userPresence(o) + writer.userStats(o)
+
     if player.clan: player.join_channel(player.clan.channel)
 
     # restricted/frozen etc. messages
 
     elapsed = (now_float() - start) * 1000
-    data += writer.notification(f'Welcome to Iteki!\n\nUsing astrid.\nTime Elapsed: {elapsed:.2f}ms')
+    data += writer.notification(f'Welcome to astrid!\n\nTime Elapsed: {elapsed:.2f}ms')
     info(f'{player.name} logged in (Time Elapsed: {elapsed:.2f}ms)')
 
     request.resp_headers['cho-token'] = token

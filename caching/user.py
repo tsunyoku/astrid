@@ -1,6 +1,7 @@
 from typing import Optional, Union
 
 from constants.countries import country_codes
+from constants.privileges import Privileges
 from objects.player import Player
 from utils.logging import debug
 from objects import glob
@@ -15,7 +16,8 @@ class UserCache:
         """Loads all players into cache"""
 
         players = await glob.sql.fetch('SELECT * FROM users')
-        for player in players: await self.add_player(player, sql=True)
+        for player in players: 
+            if player not in self.id_cache.values(): await self.add_player(player, sql=True)
 
         debug("Cached all players!")
 
@@ -34,6 +36,9 @@ class UserCache:
 
     @property
     def online(self) -> list: return [u for u in self.name_cache.values() if u.online]
+
+    @property
+    def unrestricted(self) -> list: return [u for u in self.online if not u.priv & Privileges.Disallowed]
 
     def enqueue(self, data: bytes) -> None:
         for user in self.online: user.enqueue(data)
