@@ -46,4 +46,4 @@ class Channel:
 
     def remove(self, user: 'Player') -> None:
         self.players.remove(user)
-        if len(self) == 0 and not self.permanent_channel: glob.channels.remove(self)
+        if len(self.players) == 0 and not self.permanent_channel: glob.channels.remove(self)
