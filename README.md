@@ -1,3 +1,13 @@
 # astrid
 
-This is a major work in progress, however astrid aims to contain multiple branches of astrid all written in different languages. I'll start with Python and C# and eventually this will be a drop-in replacement for Asahi as I now have the insight to write a better, more efficient server!
+entire backend emulator for osu! private servers (c# edition).
+
+astrid focuses on a few things:
+
+- speed
+- efficiency
+- quality code
+- high feature set
+
+my style can highly differ from others, as someone who falls around multiple languages all the time i have some weird ideas of what seems "clean" to other people it seems...
+i really don't give a fuck, as long as i meet the 3 targets above then people don't have to like my style as long as the code is high quality.
