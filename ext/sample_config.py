@@ -11,7 +11,7 @@ redis = {
     'password': ''
 }
 
-serving_socket = '/tmp/astrid.sock'
+serving_socket = '/tmp/astrid_py.sock'
 serving_domain = 'iteki.pw'
 discord_server = ''
 

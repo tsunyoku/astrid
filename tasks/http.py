@@ -9,6 +9,6 @@ async def create_http_session() -> None:
     debug("HTTP client session created!")
 
 async def close_http_session() -> None:
-    await glob.http.close()
+    if glob.http: await glob.http.close()
 
     debug("HTTP client session closed!")

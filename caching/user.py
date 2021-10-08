@@ -38,7 +38,7 @@ class UserCache:
     def online(self) -> list: return [u for u in self.name_cache.values() if u.online]
 
     @property
-    def unrestricted(self) -> list: return [u for u in self.online if not u.priv & Privileges.Disallowed]
+    def unrestricted(self) -> list: return [u for u in self.online if not u.disallowed]
 
     def enqueue(self, data: bytes) -> None:
         for user in self.online: user.enqueue(data)

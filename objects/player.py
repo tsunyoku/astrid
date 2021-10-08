@@ -66,9 +66,6 @@ class Player:
         self.registered_at: int = kwargs.get('registered_at', 0)
         self.silence_end: int = kwargs.get('silence_end', 0)
         self.donor_end: int = kwargs.get('donor_end', 0)
-        
-        self.cheat: bool = kwargs.get('cheat', False)
-        self.timewarp: float = 1.0
 
         self.encrypted_password: str = kwargs.get('encrypted_password')
         self.tourney_client: bool = kwargs.get('tourney_client')
@@ -76,9 +73,6 @@ class Player:
         self.pp_lb: bool = kwargs.get('pp_lb', False)
         self.lobby: bool = False
         self.online: bool = False
-
-        self.last_anticheat_scan: int = 0
-        self.last_client_scan: int = 0
 
     @property
     def mode_vn(self) -> int: return self.mode.as_vn
@@ -94,6 +88,18 @@ class Player:
     @property
     def current_stats(self) -> Stats: return self.stats[self.mode.value]
 
+    @property
+    def restricted(self) -> bool: return self.priv & Privileges.Restricted
+
+    @property
+    def banned(self) -> bool: return self.priv & Privileges.Banned
+
+    @property
+    def disallowed(self) -> bool: return self.priv & Privileges.Disallowed
+
+    @property
+    def frozen(self) -> bool: return self.priv & Privileges.Frozen
+
     def enqueue(self, data: bytes) -> None: self.queue += data
 
     @property
@@ -101,7 +107,7 @@ class Player:
         priv = ClientPrivileges(0)
         priv |= ClientPrivileges.Player
 
-        if self.priv & Privileges.Disallowed: return priv
+        if self.disallowed: return priv
 
         if self.priv & Privileges.Admin:
             priv |= ClientPrivileges.Moderator
@@ -126,7 +132,6 @@ class Player:
             password_md5=user.get('password_md5'),
             priv=Privileges(user['priv']),
             freeze_timer=datetime.fromtimestamp(user['freeze_timer']),
-            cheat=user.get('cheat'),
             encrypted_password=user.get('pw'),
             donor_end=user.get('donor_end'),
             silence_end=user.get('silence_end')
@@ -139,10 +144,7 @@ class Player:
 
         if (clan := user.get('clan')): self.clan = glob.clans.get(id=clan)
 
-        achievement_table = 'user_achievements'
-        if self.cheat: achievement_table += '_cheat'
-
-        async for achievement in glob.sql.iter(f'SELECT ach FROM {achievement_table} WHERE uid = %s', [self.id]):
+        async for achievement in glob.sql.iter(f'SELECT ach FROM user_achievements WHERE uid = %s', [self.id]):
             ...
             #for _achievement in glob.achievements:
                 #if achievement['ach'] == _achievement.id: self.achievements += achievement
@@ -153,8 +155,7 @@ class Player:
         self.token = ''
         self.online = False
 
-        if not self.priv & Privileges.Disallowed: glob.players.enqueue(writer.logout(self.id))
-
+        if not self.disallowed: glob.players.enqueue(writer.logout(self.id))
         for channel in self.channels: self.leave_channel(channel)
 
         info(f"{self.name} logged out.")
@@ -184,14 +185,14 @@ class Player:
             self.stats[mode.value] = Stats(**stat)
 
     async def get_rank(self, mode: osuModes, pp: int) -> int:
-        if self.priv & Privileges.Disallowed: return 0
+        if self.disallowed: return 0
 
         redis_rank = await glob.redis.zrevrank(f'astrid:leaderboard:{mode.name}', self.id)
         if redis_rank is None: return 1 if pp > 0 else 0
         else: return redis_rank + 1
 
     async def get_country_rank(self, mode: osuModes, pp: int) -> int:
-        if self.priv & Privileges.Disallowed: return 0
+        if self.disallowed: return 0
 
         redis_rank = await glob.redis.zrevrank(f'astrid:leaderboard:{mode.name}:{self.country_iso}', self.id)
         if redis_rank is None: return 1 if pp > 0 else 0
@@ -269,14 +270,14 @@ class Player:
             p.enqueue(join_packet)
             user.enqueue(writer.spectatorJoined(p.id))
 
-        self.spectators += user
+        self.spectators.append(user)
         user.spectating = self
 
         self.enqueue(writer.hostSpectatorJoined(user.id))
         info(f"{user.name} started spectating {self.name}")
 
     def remove_spectator(self, user: 'Player') -> None:
-        self.spectators -= user
+        self.spectators.remove(user)
         user.spectating = None
 
         if not (spec_channel := glob.channels.get(f"#spec_{self.id}")): return

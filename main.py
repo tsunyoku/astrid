@@ -58,7 +58,7 @@ async def shutdown() -> None:
     info("astrid stopped!")
 
 if __name__ == '__main__':
-    from endpoints.bancho import bancho_router
+    from handlers.bancho import bancho_router
     app.add_router(bancho_router)
 
     app.start()

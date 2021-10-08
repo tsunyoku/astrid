@@ -12,8 +12,9 @@ async def connect_redis() -> None: # TODO: port to aioredis rewrite
 
     debug("Redis connected!")
 
-async def disconnect_redis() -> None: 
-    glob.redis.close()
-    await glob.redis.wait_closed()
+async def disconnect_redis() -> None:
+    if glob.redis:
+        glob.redis.close()
+        await glob.redis.wait_closed()
 
     debug("Redis disconnected!")

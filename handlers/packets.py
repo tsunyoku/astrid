@@ -1,13 +1,13 @@
 from constants.privileges import Privileges
+from packets.reader import handle_packet
 from constants.types import osuTypes
 from constants.modes import lbModes
 from objects.player import Player
-from .reader import handle_packet
 from constants.mods import Mods
 from utils.logging import info
 from utils.general import now
+from packets.writer import *
 from objects import glob
-from .writer import *
 
 def packet(packet: Packets, restricted_packet: bool = False):
     """Decorator to add a packet handler to the scope"""
@@ -19,7 +19,7 @@ def packet(packet: Packets, restricted_packet: bool = False):
     return wrapper
 
 """
-Below contains all the functions responsible for handling all packets the osu! client may send to the server.
+Below contains all the functions responsible for handling packets the osu! client may send to the server.
 If you are looking for where these will be called, check endpoints/bancho.py.
 """
 
@@ -50,7 +50,7 @@ async def add_friend(p: Player, packet: bytes) -> None:
     target = handle_packet(packet, (osuTypes.i32,))
 
     if target in p.friends: return
-    p.friends += target
+    p.friends.append(target)
 
     await glob.sql.execute("INSERT INTO friends (user1, user2) VALUES (%s, %s)", [p.id, target])
     info(f"{p.name} added user ID {target} into their friends list.")
@@ -60,7 +60,7 @@ async def remove_friend(p: Player, packet: bytes) -> None:
     target = handle_packet(packet, (osuTypes.i32,))
 
     if target not in p.friends: return
-    p.friends -= target
+    p.friends.remove(target)
 
     await glob.sql.execute("DELETE FROM friends WHERE user1 = %s AND user2 = %s", [p.id, target])
     info(f"{p.name} removed user ID {target} from their friends list.")
@@ -167,7 +167,7 @@ async def action_update(p: Player, packet: bytes) -> None:
     p.map_id = map_id
 
     if p.action == 2: p.action_info += " +" + repr(p.mods)
-    if not p.priv & Privileges.Disallowed: glob.players.enqueue(userStats(p))
+    if not p.disallowed: glob.players.enqueue(userStats(p))
 
 @packet(Packets.OSU_START_SPECTATING)
 async def start_spectating(p: Player, packet: bytes) -> None:

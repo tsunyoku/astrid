@@ -8,5 +8,5 @@ async def connect_sql() -> None:
     debug("SQL connected!")
 
 async def disconnect_sql() -> None: 
-    await glob.sql.close()
+    if glob.sql: await glob.sql.close()
     debug("SQL disconnected!")
