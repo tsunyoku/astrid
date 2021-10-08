@@ -48,8 +48,13 @@ class UserCache:
             if (player := kwargs.pop(_type, None)): player_type = _type; break
         else: return
 
+
         for u in self.name_cache.values():
             if getattr(u, player_type) == player:
-                if kwargs.get('online') == True and not u.online: return
+                if kwargs.get("online", True) and not u.online: return
 
                 return u
+
+    def get_from_login(self, name: str, password_md5: str) -> Optional[Player]:
+        if not (user := self.get(name=name)): return
+        if user.password_md5 == password_md5: return user

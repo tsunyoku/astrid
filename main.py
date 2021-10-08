@@ -21,8 +21,10 @@ from tasks.http import (
 
 from tasks.general import ensure_paths
 
-from handlers.bancho import bancho_router
+# routers
 from handlers.avatars import avatar_router
+from handlers.bancho import bancho_router
+from handlers.web import web_router
 
 # caching
 from caching.caches import initialise_cache
@@ -53,7 +55,8 @@ SHUTDOWN_TASKS = (
 
 ROUTERS = (
     bancho_router,
-    avatar_router
+    avatar_router,
+    web_router,
 )
 
 @app.before_serving()

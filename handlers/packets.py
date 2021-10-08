@@ -74,12 +74,7 @@ async def logout(p: Player, packet: bytes) -> None:
 async def send_dm(p: Player, packet: bytes) -> None:
     msg_data = handle_packet(packet, (osuTypes.message,))
 
-    if not (
-        target := glob.players.get(
-            name=msg_data.target_username, 
-            online=True
-        )
-    ): return
+    if not (target := glob.players.get(name=msg_data.target_username)): return
 
     # TODO: handle /np, commands
 
@@ -173,7 +168,7 @@ async def action_update(p: Player, packet: bytes) -> None:
 async def start_spectating(p: Player, packet: bytes) -> None:
     target_id = handle_packet(packet, (osuTypes.i32,))
 
-    if target_id == 1 or not (target := glob.players.get(id=target_id, online=True)): return
+    if target_id == 1 or not (target := glob.players.get(id=target_id)): return
     target.add_spectator(p)
 
 @packet(Packets.OSU_STOP_SPECTATING)

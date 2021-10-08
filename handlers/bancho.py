@@ -32,7 +32,7 @@ async def bancho_client(request: Request) -> Union[tuple, bytes]:
 
     if not (agent := headers.get("User-Agent")) or agent != "osu!" or request.type == "GET": return web_page()
     if not (token := headers.get('osu-token')): return await login(request)
-    if not (player := glob.players.get(token=token, online=True)): return writer.restartServer(0)
+    if not (player := glob.players.get(token=token)): return writer.restartServer(0)
 
     body = request.body
     packet_map = glob.packets if not player.disallowed else glob.restricted_packets
@@ -71,7 +71,7 @@ async def login(request: Request) -> bytes:
     else: tourney_client = False
 
     player = None
-    if not tourney_client: player = glob.players.get(name=username)
+    if not tourney_client: player = glob.players.get(name=username, online=False)
 
     if not player:
         db_user = await glob.sql.fetchrow('SELECT * FROM users WHERE safe_name = %s', [make_safe(username)])
@@ -121,7 +121,7 @@ async def login(request: Request) -> bytes:
 
     # anticheat tm
 
-    if (player_online := glob.players.get(id=player.id, online=True)) and (start - player_online.last_ping) > 10 and not player.tourney_client: player_online.logout()
+    if (player_online := glob.players.get(id=player.id)) and (start - player_online.last_ping) > 10 and not player.tourney_client: player_online.logout()
 
     token = uuid.uuid4()
     player.utc_offset = int(client_info[1])
