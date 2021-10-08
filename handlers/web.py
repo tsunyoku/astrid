@@ -1,7 +1,7 @@
 from xevel import Router, Request
 
+from utils.general import random_string, json_get, string_get
 from constants.general import LOG_BASE, SCREENSHOT_FOLDER
-from utils.general import random_string
 from utils.logging import debug
 from objects import glob
 
@@ -83,3 +83,30 @@ async def download_map(request: Request, map_id: str) -> tuple[int, bytes]:
 
     request.resp_headers["Location"] = url
     return (301, b"")
+
+# NOTE: I believe this to be the best way to make search set and search (osu!direct), 
+# however I may provide alternate options for those who do not want to mirror Bancho
+
+@web_router.route("/web/osu-search-set.php")
+async def search_set(request: Request) -> bytes:
+    args = request.args
+    if not check_auth(args['u'], args['h'], request): return b"error: pass"
+
+    args |= {
+        "u": glob.config.bancho_username,
+        "h": glob.config.bancho_password
+    }
+
+    return (await string_get("https://old.ppy.sh/web/osu-search-set.php", args)).encode()
+
+@web_router.route("/web/osu-search.php")
+async def search_set(request: Request) -> dict:
+    args = request.args
+    if not check_auth(args['u'], args['h'], request): return b"error: pass"
+
+    args |= {
+        "u": glob.config.bancho_username,
+        "h": glob.config.bancho_password
+    }
+
+    return await json_get("https://old.ppy.sh/web/osu-search.php", args)

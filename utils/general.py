@@ -1,6 +1,7 @@
 from typing import Callable
 
 from constants.general import RANDOM_CHOICE
+from objects import glob
 
 import pymysql
 import random
@@ -18,3 +19,15 @@ def pymysql_encode(conv: Callable) -> Callable:
         return cls
 
     return wrapper
+
+async def json_get(url: str, args: dict) -> dict:
+    request = await glob.web.get(url, params=args)
+    if request.status != 200: return {}
+
+    return await request.json()
+
+async def string_get(url: str, args: dict) -> str:
+    request = await glob.web.get(url, params=args)
+    if request.status != 200: return ""
+
+    return await request.text()
