@@ -6,7 +6,7 @@ from constants.privileges import Privileges, ClientPrivileges
 from utils.general import now, now_float, make_safe
 from utils.password import encrypt_password
 from objects.player import Player
-from constants.messages import *
+from constants.general import *
 from utils.logging import *
 from packets import writer
 from objects import glob

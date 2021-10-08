@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from objects import glob
 
 BASE_WEB_MESSAGE = (
@@ -18,3 +20,7 @@ FROZEN_MSG = (
     "Your account is currently frozen. If you do not provide a liveplay within the next 7 days, your account will be restricted!\n"
     f"You can join our Discord [{glob.config.discord_server} here]"
 )
+
+DATA_FOLDER = Path.cwd() / ".data"
+AVATAR_FOLDER = DATA_FOLDER / "avatars"
+DEFAULT_AVATAR = AVATAR_FOLDER / "default.png"

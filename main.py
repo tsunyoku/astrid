@@ -19,6 +19,11 @@ from tasks.http import (
     close_http_session
 )
 
+from tasks.files import ensure_paths
+
+from handlers.bancho import bancho_router
+from handlers.avatars import avatar_router
+
 # caching
 from caching.caches import initialise_cache
 
@@ -37,12 +42,18 @@ STARTUP_TASKS = (
     connect_sql,
     connect_redis,
     create_http_session,
+    ensure_paths,
 )
 
 SHUTDOWN_TASKS = (
     disconnect_sql,
     disconnect_redis,
     close_http_session,
+)
+
+ROUTERS = (
+    bancho_router,
+    avatar_router
 )
 
 @app.before_serving()
@@ -58,7 +69,5 @@ async def shutdown() -> None:
     info("astrid stopped!")
 
 if __name__ == '__main__':
-    from handlers.bancho import bancho_router
-    app.add_router(bancho_router)
-
+    for router in ROUTERS: app.add_router(router)
     app.start()
