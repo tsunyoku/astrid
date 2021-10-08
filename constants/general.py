@@ -2,6 +2,8 @@ from pathlib import Path
 
 from objects import glob
 
+import string
+
 BASE_WEB_MESSAGE = (
     f'astrid.\n'
     'the most efficient python osu! server.\n\n'
@@ -21,6 +23,13 @@ FROZEN_MSG = (
     f"You can join our Discord [{glob.config.discord_server} here]"
 )
 
+LOG_BASE = (
+    "Handled {req.type} request on {url} in {req.elapsed} ({req.code})"
+)
+
 DATA_FOLDER = Path.cwd() / ".data"
 AVATAR_FOLDER = DATA_FOLDER / "avatars"
+SCREENSHOT_FOLDER = DATA_FOLDER / "screenshots"
 DEFAULT_AVATAR = AVATAR_FOLDER / "default.png"
+
+RANDOM_CHOICE = string.ascii_uppercase + string.ascii_lowercase + string.digits
