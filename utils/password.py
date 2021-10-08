@@ -7,7 +7,6 @@ from objects import glob
 import hashlib
 
 def hash_md5(password: str) -> str: return hashlib.md5(password.encode()).hexdigest().decode()
-
 def encrypt_password(password: str) -> bytes: return password.encode('ISO-8859-1').decode('unicode-escape').encode('ISO-8859-1')
 
 def verify_password(password_md5: bytes, encrypted_password: bytes) -> bool:
@@ -34,7 +33,6 @@ def generate_password(password_md5: str) -> str:
     )
 
     encrypted_password = k.derive(password_md5).decode('unicode-escape')
-
-    # todo add to password cache
+    glob.password_cache.cache_password(password_md5, encrypt_password(encrypted_password))
 
     return encrypted_password

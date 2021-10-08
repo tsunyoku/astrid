@@ -31,3 +31,9 @@ async def string_get(url: str, args: dict) -> str:
     if request.status != 200: return ""
 
     return await request.text()
+
+async def body_get(url: str, args: dict, body: bytes) -> str:
+    request = await glob.web.get(url, params=args, data=body)
+    if request.status != 200: return ""
+
+    return await request.text()
