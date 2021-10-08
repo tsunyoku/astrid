@@ -20,6 +20,7 @@ def check_auth(name: str, password_md5: str, request: Request) -> bool:
         return False
 
     request.extras['player'] = player
+    return True
 
 @web_router.after_request()
 async def log_request(request: Request) -> Request:
@@ -113,7 +114,8 @@ async def search_set(request: Request) -> dict:
         "h": glob.config.bancho_password
     }
 
-    return await json_get("https://old.ppy.sh/web/osu-search.php", args)
+    req = await string_get("https://old.ppy.sh/web/osu-search.php", args)
+    return req
 
 @web_router.route("/users", ["POST"])
 async def ingame_registration(request: Request) -> Union[dict, bytes]:
