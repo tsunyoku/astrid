@@ -1,4 +1,4 @@
-from functools import cache
+from functools import cache, cached_property
 from enum import Enum
 
 from utils.general import pymysql_encode, escape_enum
@@ -28,60 +28,33 @@ class osuModes(Enum):
     catch_rx = 6
     std_ap = 7
     
+    @cached_property
+    def __repr__(self) -> str: return m_str[self.value]
 
-    def __repr__(self) -> str:
-        return m_str[self.value]
-
-    @property
-    @cache
+    @cached_property
     def table(self) -> str:
-        if self.value in (4, 5, 6):
-            return 'scores_rx'
-        elif self.value in (0, 1, 2, 3):
-            return 'scores'
-        else:
-            return 'scores_ap'
+        if self.value in (4, 5, 6): return 'scores_rx'
+        elif self.value in (0, 1, 2, 3): return 'scores'
+        else: return 'scores_ap'
 
-    @property
-    @cache
+    @cached_property
     def as_vn(self) -> int:
-        if self.value in (0, 4, 7):
-            return 0
-        elif self.value in (1, 5):
-            return 1
-        elif self.value in (2, 6):
-            return 2
-        else:
-            return self.value
+        if self.value in (0, 4, 7): return 0
+        elif self.value in (1, 5): return 1
+        elif self.value in (2, 6): return 2
+        else: return self.value
 
-    @property
-    @cache
+    @cached_property
     def sort(self) -> str:
-        if self.value > 3:
-            return 'pp'
-        else:
-            return 'score'
-
-    @property
-    @cache
-    def leaderboard(self) -> str:
-        if self.value in (4, 5, 6):
-            return 'lb_rx'
-        elif self.value in (0, 1, 2, 3):
-            return 'lb'
-        else:
-            return 'lb_ap'
+        if self.value > 3: return 'pp'
+        else: return 'score'
 
 def lbModes(mode: int, mods: int) -> osuModes:
     if mods & Mods.RELAX:
-        if mode == 3:
-            return osuModes(3)
-
+        if mode == 3: return osuModes(3)
         return osuModes(mode + 4)
     elif mods & Mods.AUTOPILOT:
-        if mode != 0:
-            return osuModes(mode)
-
+        if mode != 0: return osuModes(mode)
         return osuModes(7)
 
     return osuModes(mode)

@@ -28,11 +28,6 @@ class Privileges(IntFlag):
     Master = Normal | Verified | Supporter | Nominator | Admin | Developer | Owner | BypassAnticheat | Whitelisted | Tourney
     Disallowed = Restricted | Banned
 
-    @classmethod
-    def get(cls, name) -> Optional['Privileges']:
-        if name in cls.__members__:
-            return cls[name]
-
 @pymysql_encode(escape_enum)
 class ClientPrivileges(IntFlag):
     Player = 1 << 0

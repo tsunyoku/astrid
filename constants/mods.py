@@ -60,20 +60,6 @@ class Mods(IntFlag):
 
         return _str
 
-    def calc_multiplier(self):
-        multiplier = 1.0
-
-        if self.value & Mods.EASY: multiplier *= 0.5
-        if self.value & Mods.NOFAIL: multiplier *= 0.5
-        if self.value & Mods.HALFTIME: multiplier *= 0.3
-        if self.value & Mods.HARDROCK: multiplier *= 1.06
-        if self.value & Mods.DOUBLETIME: multiplier *= 1.12
-        if self.value & Mods.HIDDEN: multiplier *= 1.06
-        if self.value & Mods.FLASHLIGHT: multiplier *= 1.12
-        if self.value & Mods.SPUNOUT: multiplier *= 0.9
-
-        return round(multiplier, 2)
-
     @classmethod
     def convert_str(cls, mods: str) -> 'Mods':
         _mods = cls.NOMOD # in case theres none to match
