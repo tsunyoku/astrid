@@ -20,7 +20,7 @@ async def check_auth(name: str, password_md5: str, request: Request) -> bool:
 
 @web_router.after_request()
 async def log_request(request: Request) -> Request:
-    msg = LOG_BASE
+    msg = LOG_BASE.format(**request)
     if (player := request.extras.get('player')): msg += f" | Request by {player.name}"
 
     debug(msg)
