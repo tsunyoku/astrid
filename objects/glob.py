@@ -19,6 +19,7 @@ sql: 'fatFawkSQL' = None
 redis: 'Redis' = None
 
 channels: 'ChannelCache' = None
+leaderboards: 'Cache' = None
 achievements: 'Cache' = None
 players: 'UserCache' = None
 clans: 'ClanCache' = None
@@ -26,6 +27,7 @@ clans: 'ClanCache' = None
 bot: 'Player' = None
 
 password_cache: 'PasswordCache' = None
+unsubmitted_cache: 'Cache' = None
 geoloc_cache: 'Cache' = None
 
 restricted_packets = {}

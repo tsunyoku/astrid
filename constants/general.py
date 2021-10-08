@@ -27,6 +27,12 @@ LOG_BASE = (
     "Handled {req.type} request on {url} in {req.elapsed} ({req.code})"
 )
 
+LEADERBOARD_BASE = (
+    "SELECT s.*, s.{sort} sort, a.name, a.id FROM {table} s "
+    "INNER JOIN users u on s.uid = u.id "
+    "WHERE {where_args} ORDER BY {sort} DESC LIMIT {limit}"
+)
+
 DATA_FOLDER = Path.cwd() / ".data"
 AVATAR_FOLDER = DATA_FOLDER / "avatars"
 SCREENSHOT_FOLDER = DATA_FOLDER / "screenshots"

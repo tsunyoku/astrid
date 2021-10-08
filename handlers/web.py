@@ -2,11 +2,14 @@ from collections import defaultdict
 from xevel import Router, Request
 from typing import Union
 
-from utils.general import random_string, json_get, string_get, body_get
+from utils.general import random_string, string_get, body_get
 from constants.general import LOG_BASE, SCREENSHOT_FOLDER
 from utils.password import hash_md5, generate_password
 from utils.general import now_float, now, make_safe
 from utils.logging import debug, info
+from packets.writer import userStats
+from constants.modes import lbModes
+from constants.mods import Mods
 from objects import glob
 
 web_router = Router(f"osu.{glob.config.serving_domain}")
@@ -175,3 +178,29 @@ async def client_updates(request: Request) -> bytes:
     }
 
     return (await string_get("https://old.ppy.sh/web/check-updates.php", args)).encode()
+
+@web_router.route("/web/osu-osz2-getscores.php")
+async def map_leaderboards(request: Request) -> bytes:
+    args = request.args
+    if not check_auth(args['us'], args['ha'], request): return b"error: pass"
+
+    player = request.extras["player"]
+    map_md5 = args["c"]
+    mods = Mods(args['m'])
+    mode = lbModes(int(args["m"]), mods.value)
+    leaderboard_mode = int(args["v"])
+
+    if glob.unsubmitted_cache.get(map_md5): return b"-1|false"
+
+    # update player info cus yea
+    if mode != player.mode or mods != player.mods:
+        player.mode = mode
+        player.mods = mods
+
+        if not player.restricted: glob.players.enqueue(userStats(player))
+
+    # get map
+    # if not map: add to unsubmitted cache, return unsub error
+    # if map has no lb, cache for no lbs and return basic headers
+    # call from leaderboard handler depending on which lb type
+    # return result
