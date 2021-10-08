@@ -19,7 +19,7 @@ from tasks.http import (
     close_http_session
 )
 
-from tasks.files import ensure_paths
+from tasks.general import ensure_paths
 
 from handlers.bancho import bancho_router
 from handlers.avatars import avatar_router

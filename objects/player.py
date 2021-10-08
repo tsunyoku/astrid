@@ -144,10 +144,8 @@ class Player:
 
         if (clan := user.get('clan')): self.clan = glob.clans.get(id=clan)
 
-        async for achievement in glob.sql.iter(f'SELECT ach FROM user_achievements WHERE uid = %s', [self.id]):
-            ...
-            #for _achievement in glob.achievements:
-                #if achievement['ach'] == _achievement.id: self.achievements += achievement
+        async for _achievement in glob.sql.iter(f'SELECT ach FROM user_achievements WHERE uid = %s', [self.id]):
+            if (achievement := glob.achievements.get(_achievement["ach"])): self.achievements.append(achievement)
 
         return self
 

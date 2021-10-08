@@ -14,15 +14,19 @@ if TYPE_CHECKING:
     from objects.player import Player
     from caching.cache import Cache
 
+http: 'ClientSession' = None
 sql: 'fatFawkSQL' = None
 redis: 'Redis' = None
-http: 'ClientSession' = None
-players: 'UserCache' = None
+
 channels: 'ChannelCache' = None
+achievements: 'Cache' = None
+players: 'UserCache' = None
 clans: 'ClanCache' = None
-password_cache: 'PasswordCache' = None
-geoloc_cache: 'Cache' = None
+
 bot: 'Player' = None
 
-packets = {}
+password_cache: 'PasswordCache' = None
+geoloc_cache: 'Cache' = None
+
 restricted_packets = {}
+packets = {}
