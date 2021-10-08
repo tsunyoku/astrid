@@ -167,4 +167,9 @@ async def map_info(request: Request) -> bytes:
 async def client_updates(request: Request) -> bytes:
     args = request.args
 
+    args |= {
+        "u": glob.config.bancho_username,
+        "h": glob.config.bancho_password
+    }
+
     return (await string_get("https://old.ppy.sh/web/check-updates.php", args)).encode()

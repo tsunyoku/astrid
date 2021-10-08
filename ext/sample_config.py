@@ -19,3 +19,7 @@ debug = True
 
 seasonal_backgrounds = [] # list of image urls to be used as the seasonal backgrounds ingame
 beatmap_mirror_url = "" # url of beatmap mirror to be used for map downloads
+
+# both below are used for osu!direct
+bancho_username = ""
+bancho_password = "" # md5 form!!!
