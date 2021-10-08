@@ -6,6 +6,7 @@ from utils.logging import debug
 from objects import glob
 
 web_router = Router(f"osu.{glob.config.serving_domain}")
+CHIMU_V1 = "chimu.moe/v1" in glob.config.beatmap_mirror_url
 
 def check_auth(name: str, password_md5: str, request: Request) -> bool:
     name = name.replace('%20', ' ') # fun
@@ -18,10 +19,10 @@ def check_auth(name: str, password_md5: str, request: Request) -> bool:
 
 @web_router.after_request()
 async def log_request(request: Request) -> Request:
-    stripped_url = "/" + '/'.join(request.url.split('/')[1:]) # removes domain
+    stripped_url = "/" + "/".join(request.url.split('/')[1:]) # removes domain
     msg = LOG_BASE.format(req=request, url=stripped_url)
 
-    if (player := request.extras.get('player')): msg += f" | Request by {player.name}"
+    if (player := request.extras.get('player')) and request.code < 400: msg += f" | Request by {player.name}"
     debug(msg)
 
     return request
@@ -60,3 +61,25 @@ async def bancho_connect(request: Request) -> bytes:
     # so I'm not sure what I will do for now.
 
     return b"owo"
+
+@web_router.route("/web/osu-getfriends.php")
+async def get_friends_list(request: Request) -> bytes:
+    if not check_auth(request.args['u'], request.args['h'], request): return b''
+
+    return '\n'.join(
+        map(str, request.extras["player"].friends)
+    ).encode()
+
+@web_router.route("/web/osu-getseasonal.php")
+async def get_seasonal_backgrounds(request: Request) -> list: return glob.config.seasonal_backgrounds
+
+@web_router.route("/d/<map_id>")
+async def download_map(request: Request, map_id: str) -> tuple[int, bytes]:
+    map_id = map_id.removesuffix("n")
+    no_vid = 1 if ("n" == map_id[-1]) else 0
+
+    url = "https://{glob.config.beatmap_mirror_url}/d/{map_id}"
+    if CHIMU_V1: url = f"https://{glob.config.beatmap_mirror_url}/download/{map_id}?n={no_vid}"
+
+    request.resp_headers["Location"] = url
+    return (301, b"")
