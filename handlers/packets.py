@@ -1,6 +1,6 @@
 from constants.privileges import Privileges
 from packets.reader import handle_packet
-from constants.types import osuTypes
+from constants.osu_types import osuTypes
 from constants.modes import lbModes
 from objects.player import Player
 from constants.mods import Mods

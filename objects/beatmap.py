@@ -131,5 +131,5 @@ class Beatmap:
             "REPLACE INTO maps (id, sid, md5, bpm, cs, ar, od, hp, sr, mode, "
             "artist, title, diff, mapper, status, frozen, `update`, nc, plays, passes) "
             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            self.__dict__.values(), # haha!
+            self.__dict__.values() # haha!
         )
