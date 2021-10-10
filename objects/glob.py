@@ -1,4 +1,4 @@
-import config # indirect import
+import config  # indirect import
 
 from typing import TYPE_CHECKING
 
@@ -14,21 +14,22 @@ if TYPE_CHECKING:
     from objects.player import Player
     from caching.cache import Cache
 
-http: 'ClientSession' = None
-sql: 'fatFawkSQL' = None
-redis: 'Redis' = None
+http: "ClientSession" = None
+sql: "fatFawkSQL" = None
+redis: "Redis" = None
 
-channels: 'ChannelCache' = None
-leaderboards: 'Cache' = None
-achievements: 'Cache' = None
-players: 'UserCache' = None
-clans: 'ClanCache' = None
+channels: "ChannelCache" = None
+leaderboards: "Cache" = None
+achievements: "Cache" = None
+players: "UserCache" = None
+clans: "ClanCache" = None
+maps: "Cache" = None
 
-bot: 'Player' = None
+bot: "Player" = None
 
-password_cache: 'PasswordCache' = None
-unsubmitted_cache: 'Cache' = None
-geoloc_cache: 'Cache' = None
+password_cache: "PasswordCache" = None
+unsubmitted_cache: "Cache" = None
+geoloc_cache: "Cache" = None
 
 restricted_packets = {}
 packets = {}
