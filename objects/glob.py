@@ -1,4 +1,4 @@
-import config  # indirect import
+import config # indirect import
 
 from typing import TYPE_CHECKING
 

@@ -7,7 +7,6 @@ from utils.general import now, json_get
 from constants.modes import osuModes
 from . import glob
 
-
 class Beatmap:
     def __init__(self, **kwargs) -> None:
         self.md5: str = kwargs.get("md5", "")
@@ -32,20 +31,16 @@ class Beatmap:
         self.passes: int = kwargs.get("passes", 0)
 
     @property
-    def full_name(self) -> str:
-        return f"{self.artist} - {self.title} [{self.diff}]"
+    def full_name(self) -> str: return f"{self.artist} - {self.title} [{self.diff}]"
 
     @property
-    def url(self) -> str:
-        return f"https://osu.{glob.config.serving_domain}/beatmaps/{self.id}"
+    def url(self) -> str: return f"https://osu.{glob.config.serving_domain}/beatmaps/{self.id}"
 
     @property
-    def set_url(self) -> str:
-        return f"https://osu.{glob.config.serving_domain}/beatmapsets/{self.sid}"
+    def set_url(self) -> str: return f"https://osu.{glob.config.serving_domain}/beatmapsets/{self.sid}"
 
     @property
-    def embed(self) -> str:
-        return f"[{self.url} {self.name}]"
+    def embed(self) -> str: return f"[{self.url} {self.name}]"
 
     @classmethod
     async def from_md5(cls, md5: str) -> Optional["Beatmap"]:
@@ -64,12 +59,9 @@ class Beatmap:
             - Beatmap object, if the map is found
         """
 
-        if self := glob.maps.get(md5):
-            return self
-        if self := await cls.fetch_md5_from_sql(md5):
-            return self
-        if self := await cls.fetch_md5_from_api(md5):
-            return self
+        if self := glob.maps.get(md5): return self
+        if self := await cls.fetch_md5_from_sql(md5): return self
+        if self := await cls.fetch_md5_from_api(md5): return self
 
     @classmethod
     async def fetch_md5_from_sql(cls, md5: str) -> Optional["Beatmap"]:
@@ -84,8 +76,7 @@ class Beatmap:
         """
 
         map_row = await glob.sql.fetchrow("SELECT * FROM maps WHERE md5 = %s", [md5])
-        if not map_row:
-            return
+        if not map_row: return
 
         self = cls(**map_row)
         glob.maps.add(md5, self)  # add to cache for future use
@@ -104,11 +95,8 @@ class Beatmap:
             - Beatmap object, if the map is found
         """
 
-        map_json = await json_get(
-            BEATMAP_API_URL, {"k": glob.config.bancho_api_key, "h": md5}
-        )
-        if not map_json:
-            return
+        map_json = await json_get(BEATMAP_API_URL, {"k": glob.config.bancho_api_key, "h": md5})
+        if not map_json: return
 
         map_info = map_json[0]
         self = cls(
@@ -127,13 +115,11 @@ class Beatmap:
             diff=map_info["version"],
             mapper=map_info["creator"],
             status=mapStatuses.from_api(int(map_info["approved"])),
-            update=datetime.strptime(
-                map_info["last_update"], "%Y-%m-%d %H:%M:%S"
-            ).timestamp(),
+            update=datetime.strptime(map_info["last_update"], "%Y-%m-%d %H:%M:%S").timestamp(),
             nc=now(),
         )
 
-        glob.maps.add(md5, self)  # add to cache for future use
+        glob.maps.add(md5, self) # add to cache for future use
         await self.save_to_db()
 
         return self
@@ -145,5 +131,5 @@ class Beatmap:
             "REPLACE INTO maps (id, sid, md5, bpm, cs, ar, od, hp, sr, mode, "
             "artist, title, diff, mapper, status, frozen, `update`, nc, plays, passes) "
             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            self.__dict__.values(),  # haha!
+            self.__dict__.values(), # haha!
         )
