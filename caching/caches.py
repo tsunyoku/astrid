@@ -12,10 +12,11 @@ glob.geoloc_cache = Cache()
 glob.channels = ChannelCache()
 glob.clans = ClanCache()
 glob.achievements = AchievementCache()
-glob.leaderboards = Cache() # format of identifier: (map md5, mode)
+glob.leaderboards = Cache()  # format of identifier: (map md5, mode)
+glob.maps = Cache()  # format of identifiers: (md5 or beatmap id, mode if beatmap id)
 glob.unsubmitted_cache = Cache()
 
-async def initialise_cache() -> None: # loaded in order of priority
+async def initialise_cache() -> None:  # loaded in order of priority
     await glob.channels.load_channels()
     await glob.clans.load_clans()
 

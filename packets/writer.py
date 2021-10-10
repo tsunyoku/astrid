@@ -2,7 +2,7 @@ import struct
 
 from enum import IntEnum
 
-from constants.types import osuTypes
+from constants.osu_types import osuTypes
 from objects import glob
 
 class Packets(IntEnum):
@@ -266,7 +266,7 @@ def botStats() -> bytes:
         (0, osuTypes.i32),
         (0, osuTypes.u8),
         (0, osuTypes.i32),
-        (0, osuTypes.i64), 
+        (0, osuTypes.i64),
         (0.00, osuTypes.f32),
         (0, osuTypes.i32),
         (0, osuTypes.i64),
@@ -289,7 +289,7 @@ def userStats(player) -> bytes:
         (player.current_stats.rscore, osuTypes.i64),
         (player.current_stats.acc / 100.0, osuTypes.f32),
         (player.current_stats.pc, osuTypes.i32),
-        (player.current_stats.tscore, osuTypes.i64), 
+        (player.current_stats.tscore, osuTypes.i64),
         (player.current_stats.rank, osuTypes.i32),
         (player.current_stats.pp, osuTypes.i16)
     )

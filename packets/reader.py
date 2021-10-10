@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from constants.types import osuTypes
+from constants.osu_types import osuTypes
 
 import struct
 
@@ -66,7 +66,7 @@ class Reader:
 
         data = self.data[self.offset:self.offset + offset]
         self.offset += offset
-        
+
         return data
 
     def read_int(self, size: int, signed: bool) -> int:
@@ -79,8 +79,8 @@ class Reader:
         """
 
         return int.from_bytes(
-            self.read(size), 
-            'little', 
+            self.read(size),
+            'little',
             signed=signed
         )
 
@@ -93,13 +93,13 @@ class Reader:
         """
 
         return struct.unpack(
-            "<f", 
+            "<f",
             self.read(size)
         )
 
     def read_i8(self) -> int: return self.read_int(1, True)
     def read_u8(self) -> int: return self.read_int(1, False)
-    
+
     def read_i16(self) -> int: return self.read_int(2, True)
     def read_u16(self) -> int: return self.read_int(2, False)
 
@@ -120,7 +120,7 @@ class Reader:
         self.offset += length * 4
 
         return data
-    
+
     def read_i32_4list(self) -> list:
         length = self.read_i32()
 
@@ -158,5 +158,3 @@ class Reader:
             desc = self.read_string(),
             players = self.read_i32()
         )
-
-
