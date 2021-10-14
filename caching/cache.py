@@ -31,7 +31,7 @@ class Cache:
 
     def add(self, cache_identifier: Any, cache_value: Any) -> None:
         """
-        Adds a value to the cache.
+        Adds or updates a value to the cache.
 
         Arguments:
             cache_identifier (Any): Main identifier for a new cache value; usually a string, int, dict or tuple.
@@ -44,19 +44,25 @@ class Cache:
             value=cache_value
         )
 
-        self._cache.append(new_obj)
+        if not (obj := self.get(cache_identifier, get_object=True)): self._cache.append(new_obj)
+        else: # i dont know if setting like this is actually necessary but i think cus its a local i have to
+            obj.identifier = new_obj.identifier
+            obj.expires_at = new_obj.expires_at
+            obj.value = new_obj.value
+
         self.overlook_cache()
 
-    def get(self, cache_identifier: Any) -> Optional[Any]:
+    def get(self, cache_identifier: Any, get_object: bool = False) -> Optional[Any]:
         """
         Gets the value of a cache object by its given identifier, if it exists.
 
         Arguments:
             cache_identifier (Any): the identifier to search for.
+            get_object (Bool): whether it should return the value or the raw CacheObject
         """
 
         for _obj in self._cache:
-            if _obj.identifier == cache_identifier: return _obj.value
+            if _obj.identifier == cache_identifier: return _obj.value if not get_object else _obj
 
     def remove(self, cache_object: CacheObject) -> None:
         """Removes a cache object from cache."""

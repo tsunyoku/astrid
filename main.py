@@ -22,9 +22,9 @@ from tasks.http import (
 from tasks.general import ensure_paths
 
 # routers
-from handlers.avatars import avatar_router
-from handlers.bancho import bancho_router
-from handlers.web import web_router
+from handlers.routes.avatars import avatar_router
+from handlers.routes.bancho import bancho_router
+from handlers.routes.web import web_router
 
 # caching
 from caching.caches import initialise_cache

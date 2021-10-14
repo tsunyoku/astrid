@@ -21,12 +21,37 @@ FROZEN_MSG = (
 LOG_BASE = "Handled {req.type} request on {url} in {req.elapsed} ({req.code})"
 
 LEADERBOARD_BASE = (
-    "SELECT s.*, s.{sort} sort, a.name, a.id FROM {table} s "
+    "SELECT s.*, s.{sort} sort, u.name FROM {table} s "
     "INNER JOIN users u on s.uid = u.id "
-    "WHERE {where_args} ORDER BY {sort} DESC LIMIT {limit}"
+    "WHERE {where_args} ORDER BY {sort} DESC LIMIT 100"
+)
+
+PB_BASE = (
+    "SELECT s.*, s.{sort} sort, u.name FROM {table} s "
+    "INNER JOIN users u on s.uid = u.id "
+    "WHERE {where_args} ORDER BY {sort} DESC LIMIT 1"
+)
+
+PB_COUNT = (
+    "SELECT COUNT(*) + 1 FROM {table} s "
+    "INNER JOIN users u on s.uid = u.id "
+    "WHERE {where_args} ORDER BY {sort} DESC"
+)
+
+COUNT_QUERY = (
+    "SELECT COUNT(*) FROM {table} s INNER JOIN users u on "
+    "s.userid = u.id WHERE {where_args}"
 )
 
 BEATMAP_API_URL = "https://old.ppy.sh/api/get_beatmaps"
+UNSUB_HEADER = b"-1|false"
+
+BASE_HEADER = (
+    "{map.status.value}|false|{map.id}|{map.sid}|{count}\n"
+    "0\n{map.full_name}\n0"
+)
+
+CHIMU_V1 = "chimu.moe/v1" in glob.config.beatmap_mirror_url
 
 DATA_FOLDER = Path.cwd() / ".data"
 AVATAR_FOLDER = DATA_FOLDER / "avatars"

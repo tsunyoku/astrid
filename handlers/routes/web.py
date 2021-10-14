@@ -2,18 +2,19 @@ from collections import defaultdict
 from xevel import Router, Request
 from typing import Union
 
+from constants.general import LOG_BASE, SCREENSHOT_FOLDER, UNSUB_HEADER, CHIMU_V1
 from utils.general import random_string, string_get, body_get
-from constants.general import LOG_BASE, SCREENSHOT_FOLDER
+from handlers.leaderboards import fetch_leaderboard
 from utils.password import hash_md5, generate_password
 from utils.general import now_float, now, make_safe
 from utils.logging import debug, info
 from packets.writer import userStats
+from objects.beatmap import Beatmap
 from constants.modes import lbModes
 from constants.mods import Mods
 from objects import glob
 
 web_router = Router(f"osu.{glob.config.serving_domain}")
-CHIMU_V1 = "chimu.moe/v1" in glob.config.beatmap_mirror_url
 
 def check_auth(name: str, password_md5: str, request: Request) -> bool:
     name = name.replace('%20', ' ') # fun
@@ -186,11 +187,11 @@ async def map_leaderboards(request: Request) -> bytes:
 
     player = request.extras["player"]
     map_md5 = args["c"]
-    mods = Mods(args['m'])
+    mods = Mods(int(args['mods']))
     mode = lbModes(int(args["m"]), mods.value)
     leaderboard_mode = int(args["v"])
 
-    if glob.unsubmitted_cache.get(map_md5): return b"-1|false"
+    if glob.unsubmitted_cache.get(map_md5): return UNSUB_HEADER
 
     # update player info cus yea
     if mode != player.mode or mods != player.mods:
@@ -199,8 +200,11 @@ async def map_leaderboards(request: Request) -> bytes:
 
         if not player.restricted: glob.players.enqueue(userStats(player))
 
-    # get map
-    # if not map: add to unsubmitted cache, return unsub error
-    # if map has no lb, cache for no lbs and return basic headers
-    # call from leaderboard handler depending on which lb type
-    # return result
+    if not (map := await Beatmap.from_md5(map_md5)):
+        # TODO: check if it is unsubmitted or needs updating
+        glob.unsubmitted_cache.add(map_md5, map)
+        return UNSUB_HEADER
+
+    # TODO: check against next check and check map status
+    if not map.has_leaderboard: return f"{map.status}|false".encode()
+    return await fetch_leaderboard(map, player, leaderboard_mode)

@@ -11,3 +11,8 @@ class mapStatuses(IntEnum):
     Loved = 5
 
     GIVE_PP = Ranked | Approved
+
+    @classmethod
+    def from_api(cls, status: int) -> 'mapStatuses':
+        if status in (-2, -1, 0): return cls.Pending
+        if status in (1, 2, 3, 4): return cls(status + 1)

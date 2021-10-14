@@ -30,6 +30,7 @@ bot: "Player" = None
 password_cache: "PasswordCache" = None
 unsubmitted_cache: "Cache" = None
 geoloc_cache: "Cache" = None
+pb_cache: "Cache" = None
 
 restricted_packets = {}
 packets = {}

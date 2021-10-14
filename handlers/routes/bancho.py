@@ -7,10 +7,10 @@ from utils.general import now, now_float, make_safe
 from utils.password import encrypt_password
 from objects.player import Player
 from constants.general import *
+from handlers import packets
 from utils.logging import *
 from packets import writer
 from objects import glob
-from . import packets
 
 import uuid
 
@@ -170,8 +170,4 @@ async def login(request: Request) -> bytes:
     request.resp_headers['Cache-Control'] = 'no-cache'
 
     return bytes(data)
-    
 
-
-
-    

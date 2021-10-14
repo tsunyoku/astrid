@@ -42,6 +42,9 @@ class Beatmap:
     @property
     def embed(self) -> str: return f"[{self.url} {self.name}]"
 
+    @property
+    def has_leaderboard(self) -> str: return self.status >= mapStatuses.Ranked
+
     @classmethod
     async def from_md5(cls, md5: str) -> Optional["Beatmap"]:
         """
