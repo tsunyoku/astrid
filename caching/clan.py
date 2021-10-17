@@ -29,9 +29,9 @@ class ClanCache:
 
         clan.channel = Channel(
             name='#clan',
-            desc=f'Clan chat for clan {clan.name}',
-            auto_join=True,
-            permanent_channel=True
+            descr=f'Clan chat for clan {clan.name}',
+            auto=True,
+            perm=True
         )
 
         clan.country = await glob.sql.fetchval('SELECT country FROM users WHERE id = %s', [clan.owner])

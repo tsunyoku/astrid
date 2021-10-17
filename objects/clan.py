@@ -1,21 +1,24 @@
 from typing import TYPE_CHECKING, Optional
+from dataclasses import dataclass, field
 
 if TYPE_CHECKING:
     from .channel import Channel
 #     from .match import Match
 
+@dataclass
 class Clan:
-    def __init__(self, **kwargs) -> None:
-        self.id: int = kwargs.get('id', 0)
-        self.name: str = kwargs.get('name', 0)
-        self.tag: str = kwargs.get('tag', 0)
-        self.owner: int = kwargs.get('owner', 0)
-        self.channel: Optional[Channel] = None
-        self.members: list = []
+    """Dataclass to represent a single clan"""
 
-        #self.battle: Match = None
-        self.score: int = kwargs.get('score', 0)
-        self.country: str = None
+    id: int
+    name: str
+    tag: str
+    owner: int
+    channel: Optional['Channel'] = None
+    members: list = field(default_factory=lambda: [])
 
-        #self.rank: int = 0
-        #self.country_rank: int = 0
+    #battle: Match
+    score: int = 0
+    country: str = ""
+
+    #rank: int
+    #country_rank: int

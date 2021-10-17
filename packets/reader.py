@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from constants.osu_types import osuTypes
+from constants.types import osuType
 
 import struct
 
@@ -8,23 +8,23 @@ Message = namedtuple('Message', ['from_username', 'msg', 'target_username', 'fro
 Channel = namedtuple('Channel', ['name', 'desc', 'players'])
 
 types = { # waaaaaaaaaaaaa
-    osuTypes.i8: lambda rd: rd.read_i8(),
-    osuTypes.u8: lambda rd: rd.read_u8(),
-    osuTypes.i16: lambda rd: rd.read_i16(),
-    osuTypes.u16: lambda rd: rd.read_u16(),
-    osuTypes.i32: lambda rd: rd.read_i32(),
-    osuTypes.u32: lambda rd: rd.read_u32(),
-    osuTypes.f32: lambda rd: rd.read_f32(),
-    osuTypes.i64: lambda rd: rd.read_i64(),
-    osuTypes.u64: lambda rd: rd.read_u64(),
-    osuTypes.f64: lambda rd: rd.read_f64(),
-    osuTypes.message: lambda rd: rd.read_msg(),
-    osuTypes.channel: lambda rd: rd.read_chan(),
-    osuTypes.match: lambda rd: rd.read_match(),
-    osuTypes.i32_list: lambda rd: rd.read_i32_list(),
-    osuTypes.i32_list4l: lambda rd: rd.read_i32_4list(),
-    osuTypes.string: lambda rd: rd.read_string(),
-    osuTypes.raw: lambda rd: rd.read_raw()
+    osuType.i8: lambda rd: rd.read_i8(),
+    osuType.u8: lambda rd: rd.read_u8(),
+    osuType.i16: lambda rd: rd.read_i16(),
+    osuType.u16: lambda rd: rd.read_u16(),
+    osuType.i32: lambda rd: rd.read_i32(),
+    osuType.u32: lambda rd: rd.read_u32(),
+    osuType.f32: lambda rd: rd.read_f32(),
+    osuType.i64: lambda rd: rd.read_i64(),
+    osuType.u64: lambda rd: rd.read_u64(),
+    osuType.f64: lambda rd: rd.read_f64(),
+    osuType.message: lambda rd: rd.read_msg(),
+    osuType.channel: lambda rd: rd.read_chan(),
+    osuType.match: lambda rd: rd.read_match(),
+    osuType.i32_list: lambda rd: rd.read_i32_list(),
+    osuType.i32_list4l: lambda rd: rd.read_i32_4list(),
+    osuType.string: lambda rd: rd.read_string(),
+    osuType.raw: lambda rd: rd.read_raw()
 }
 
 def handle_packet(packet_data: bytes, structs: tuple) -> list:

@@ -1,34 +1,37 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
 from constants.general import BEATMAP_API_URL
-from constants.statuses import mapStatuses
+from constants.statuses import mapStatus
 from utils.general import now, json_get
-from constants.modes import osuModes
+from constants.modes import Mode
 from . import glob
 
+@dataclass
 class Beatmap:
-    def __init__(self, **kwargs) -> None:
-        self.md5: str = kwargs.get("md5", "")
-        self.id: int = kwargs.get("id", 0)
-        self.sid: int = kwargs.get("sid", 0)
-        self.bpm: float = kwargs.get("bpm", 0.0)
-        self.cs: float = kwargs.get("cs", 0.0)
-        self.ar: float = kwargs.get("ar", 0.0)
-        self.od: float = kwargs.get("od", 0.0)
-        self.hp: float = kwargs.get("hp", 0.0)
-        self.sr: float = kwargs.get("sr", 0.00)
-        self.mode: "osuModes" = osuModes(kwargs.get("mode", 0))
-        self.artist: str = kwargs.get("artist", "")
-        self.title: str = kwargs.get("title", "")
-        self.diff: str = kwargs.get("diff", "")
-        self.mapper: str = kwargs.get("mapper", "")
-        self.status: "mapStatuses" = mapStatuses(kwargs.get("status", 0))
-        self.frozen: bool = kwargs.get("frozen", 0) == 1
-        self.update: int = kwargs.get("update", 0)
-        self.nc: int = kwargs.get("nc", 0)  # next api status check
-        self.plays: int = kwargs.get("plays", 0)
-        self.passes: int = kwargs.get("passes", 0)
+    """Dataclass to represent a single beatmap, alongside helper functions"""
+
+    id: int
+    sid: int
+    md5: str
+    bpm: float
+    cs: float
+    ar: float
+    od: float
+    hp: float
+    sr: float
+    mode: "Mode"
+    artist: str
+    title: str
+    diff: str
+    mapper: str
+    status: "mapStatus"
+    frozen: bool
+    update: int
+    nc: int # next api status check
+    plays: int
+    passes: int
 
     @property
     def full_name(self) -> str: return f"{self.artist} - {self.title} [{self.diff}]"
@@ -43,7 +46,13 @@ class Beatmap:
     def embed(self) -> str: return f"[{self.url} {self.name}]"
 
     @property
-    def has_leaderboard(self) -> str: return self.status >= mapStatuses.Ranked
+    def has_leaderboard(self) -> bool: return self.status >= mapStatus.Ranked
+
+    @property
+    def gives_pp(self) -> bool: return self.has_leaderboard and self.status != mapStatus.Loved
+
+    @property
+    def formatted_update(self) -> str: return datetime.utcfromtimestamp(self.update).strftime("%Y-%m-%d %H:%M:%S")
 
     @classmethod
     async def from_md5(cls, md5: str) -> Optional["Beatmap"]:
@@ -81,6 +90,8 @@ class Beatmap:
         map_row = await glob.sql.fetchrow("SELECT * FROM maps WHERE md5 = %s", [md5])
         if not map_row: return
 
+        if map_row.get("server"): del map_row["server"] # iteki tings
+
         self = cls(**map_row)
         glob.maps.add(md5, self)  # add to cache for future use
 
@@ -112,14 +123,17 @@ class Beatmap:
             od=float(map_info["diff_overall"]),
             hp=float(map_info["diff_drain"]),
             sr=float(map_info["difficultyrating"]),
-            mode=osuModes(int(map_info["mode"])),
+            mode=Mode(int(map_info["mode"])),
             artist=map_info["artist"],
             title=map_info["title"],
             diff=map_info["version"],
             mapper=map_info["creator"],
-            status=mapStatuses.from_api(int(map_info["approved"])),
+            status=mapStatus.from_api(int(map_info["approved"])),
             update=datetime.strptime(map_info["last_update"], "%Y-%m-%d %H:%M:%S").timestamp(),
             nc=now(),
+            frozen=False,
+            plays=0,
+            passes=0,
         )
 
         glob.maps.add(md5, self) # add to cache for future use
@@ -134,5 +148,5 @@ class Beatmap:
             "REPLACE INTO maps (id, sid, md5, bpm, cs, ar, od, hp, sr, mode, "
             "artist, title, diff, mapper, status, frozen, `update`, nc, plays, passes) "
             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            self.__dict__.values() # haha!
+            list(self.__dict__.values()) # haha!
         )

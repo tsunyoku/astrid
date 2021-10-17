@@ -7,3 +7,6 @@ uvloop
 xevel
 orjson
 cffi
+py3rijndael
+cmyui
+peace_performance_python

@@ -8,16 +8,14 @@ from objects import glob
 
 class UserCache:
     def __init__(self) -> None:
-        self.name_cache: dict = {}
-        self.safe_name_cache: dict = {}
-        self.id_cache: dict = {}
+        self._cache: list = []
 
     async def load_players(self) -> None:
         """Loads all players into cache"""
 
         players = await glob.sql.fetch('SELECT * FROM users')
         for player in players: 
-            if player not in self.id_cache.values(): await self.add_player(player, sql=True)
+            if player not in self._cache: await self.add_player(player, sql=True)
 
         debug("Cached all players!")
 
@@ -30,12 +28,10 @@ class UserCache:
 
         if player.id == 1: glob.bot = player; glob.bot.online = True
 
-        self.name_cache |= {player.name: player}
-        self.safe_name_cache |= {player.safe_name: player}
-        self.id_cache |= {player.id: player}
+        self._cache.append(player)
 
     @property
-    def online(self) -> list: return [u for u in self.name_cache.values() if u.online]
+    def online(self) -> list: return [u for u in self._cache if u.online]
 
     @property
     def unrestricted(self) -> list: return [u for u in self.online if not u.disallowed]
@@ -48,8 +44,7 @@ class UserCache:
             if (player := kwargs.pop(_type, None)): player_type = _type; break
         else: return
 
-
-        for u in self.name_cache.values():
+        for u in self._cache:
             if getattr(u, player_type) == player:
                 if kwargs.get("online", True) and not u.online: return
 

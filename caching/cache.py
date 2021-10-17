@@ -46,7 +46,6 @@ class Cache:
 
         if not (obj := self.get(cache_identifier, get_object=True)): self._cache.append(new_obj)
         else: # i dont know if setting like this is actually necessary but i think cus its a local i have to
-            obj.identifier = new_obj.identifier
             obj.expires_at = new_obj.expires_at
             obj.value = new_obj.value
 
@@ -68,7 +67,7 @@ class Cache:
         """Removes a cache object from cache."""
 
         try: self._cache.remove(cache_object)
-        except KeyError: pass
+        except (KeyError, ValueError): pass
 
     def _overlook_expired(self) -> None:
         """Checks for any cache values that have expired, and removes where necessary."""

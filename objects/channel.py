@@ -6,6 +6,7 @@ from objects import glob
 if TYPE_CHECKING: from .player import Player
 
 class Channel:
+    """A class to represent a single channel, and provide basic communication with it"""
     def __init__(self, **kwargs):
         self.name: str = kwargs.get('name')
         self.desc: str = kwargs.get('desc')

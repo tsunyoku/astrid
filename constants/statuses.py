@@ -1,7 +1,9 @@
 from enum import IntEnum
 
+from utils.general import pymysql_encode, escape_enum
 
-class mapStatuses(IntEnum):
+@pymysql_encode(escape_enum)
+class mapStatus(IntEnum):
     NotSubmitted = -1
     Pending = 0
     Update = 1
@@ -13,6 +15,13 @@ class mapStatuses(IntEnum):
     GIVE_PP = Ranked | Approved
 
     @classmethod
-    def from_api(cls, status: int) -> 'mapStatuses':
-        if status in (-2, -1, 0): return cls.Pending
-        if status in (1, 2, 3, 4): return cls(status + 1)
+    def from_api(cls, status: int) -> 'mapStatus':
+        if status <= 0: return cls.Pending
+        
+        return cls(status + 1)
+
+@pymysql_encode(escape_enum)
+class scoreStatus(IntEnum):
+    Failed = 0
+    Submitted = 1
+    Best = 2

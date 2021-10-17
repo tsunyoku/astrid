@@ -1,10 +1,10 @@
 from typing import Any
 
 from .achievement import AchievementCache
-from constants.modes import osuModes
 from .password import PasswordCache
 from objects.player import Player
 from .channel import ChannelCache
+from constants.modes import Mode
 from constants.mods import Mods
 from .user import UserCache
 from .clan import ClanCache
@@ -17,8 +17,8 @@ glob.geoloc_cache = Cache()
 glob.channels = ChannelCache()
 glob.clans = ClanCache()
 glob.achievements = AchievementCache()
-glob.leaderboards = Cache()  # format of identifier: (map md5, mode)
-glob.maps = Cache()  # format of identifiers: (md5 or beatmap id, mode if beatmap id)
+glob.leaderboards = Cache() # format of identifier: (map md5, mode)
+glob.maps = Cache() # format of identifiers: (md5 or beatmap id, mode if beatmap id)
 glob.unsubmitted_cache = Cache()
 glob.pb_cache = Cache()
 
@@ -30,14 +30,14 @@ async def initialise_cache() -> None: # loaded in order of priority
     await glob.achievements.load_achievements()
 
 def get_lb_cache(
-    mode: osuModes, md5: str, lb_type: int, 
+    mode: Mode, md5: str, lb_type: int, 
     mods: Mods = None, user: Player = None
 ) -> Any:
     """Stupidly cursed function to try and make leaderboard cache efficient and clean."""
 
     lb_base = glob.leaderboards.get((mode, md5))
     if not lb_base: 
-        glob.leaderboards.add((mode, md5,), Cache()) # empty for now
+        glob.leaderboards.add((mode, md5), Cache()) # empty for now
         lb_base = glob.leaderboards.get((mode, md5))
 
     if lb_type == 1: cache_identifier = 1
@@ -48,7 +48,7 @@ def get_lb_cache(
     return lb_base.get(cache_identifier)
 
 def add_lb_cache(
-    mode: osuModes, md5: str, 
+    mode: Mode, md5: str, 
     lb_type: int, lb_scores: list, lb_count: int,
     mods: Mods = None, user: Player = None
 ) -> None:
@@ -56,7 +56,7 @@ def add_lb_cache(
 
     lb_base = glob.leaderboards.get((mode, md5))
     if not lb_base: 
-        glob.leaderboards.add((mode, md5,), Cache()) # empty for now
+        glob.leaderboards.add((mode, md5), Cache()) # empty for now
         lb_base = glob.leaderboards.get((mode, md5))
 
     if lb_type == 1: cache_identifier = 1
@@ -66,8 +66,15 @@ def add_lb_cache(
 
     lb_base.add(cache_identifier, (lb_scores, lb_count,))
 
+def clear_lb_cache(mode: Mode, md5: str) -> None:
+    """A cursed function to clear the leaderboard cache for a given map and mode"""
+
+    glob.leaderboards.remove(
+        glob.leaderboards.get((mode, md5), get_object=True)
+    )
+
 def get_pb_cache(
-    mode: osuModes, md5: str, lb_type: int, 
+    mode: Mode, md5: str, lb_type: int, 
     mods: Mods = None, user: Player = None
 ) -> Any:
     """Stupidly cursed function to try and make personal best cache efficient and clean."""
@@ -85,7 +92,7 @@ def get_pb_cache(
     return lb_base.get(cache_identifier)
 
 def add_pb_cache(
-    mode: osuModes, md5: str, 
+    mode: Mode, md5: str, 
     lb_type: int, pb_score: dict, pb_place: int,
     mods: Mods = None, user: Player = None
 ) -> None:
@@ -102,3 +109,10 @@ def add_pb_cache(
     elif lb_type == 4: cache_identifier = (4, user.country_iso.lower(),)
 
     lb_base.add(cache_identifier, (pb_score, pb_place,))
+
+def clear_pb_cache(mode: Mode, md5: str, user: Player) -> None:
+    """Function to clear the personal best cache for a given map and mode of a user"""
+
+    glob.pb_cache.remove(
+        glob.leaderboards.get((mode, md5, user), get_object=True)
+    )

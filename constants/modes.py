@@ -1,6 +1,7 @@
-from functools import cache, cached_property
-from enum import Enum
+from functools import cached_property
+from enum import IntEnum
 
+from .general import VANILLA_REPLAY_PATH, RELAX_REPLAY_PATH, AUTOPILOT_REPLAY_PATH
 from utils.general import pymysql_encode, escape_enum
 from .mods import Mods
 
@@ -17,7 +18,7 @@ m_str = (
 )
 
 @pymysql_encode(escape_enum)
-class osuModes(Enum):
+class Mode(IntEnum):
     std = 0
     taiko = 1
     catch = 2
@@ -27,8 +28,18 @@ class osuModes(Enum):
     taiko_rx = 5
     catch_rx = 6
     std_ap = 7
+
+    @classmethod
+    def from_lb(cls, mode: int, mods: int) -> "Mode":
+        if mods & Mods.RELAX:
+            if mode == 3: return cls(3)
+            return cls(mode + 4)
+        elif mods & Mods.AUTOPILOT:
+            if mode != 0: return cls(mode)
+            return cls(7)
+
+        return cls(mode)
     
-    @cached_property
     def __repr__(self) -> str: return m_str[self.value]
 
     @cached_property
@@ -49,12 +60,8 @@ class osuModes(Enum):
         if self.value > 3: return 'pp'
         else: return 'score'
 
-def lbModes(mode: int, mods: int) -> osuModes:
-    if mods & Mods.RELAX:
-        if mode == 3: return osuModes(3)
-        return osuModes(mode + 4)
-    elif mods & Mods.AUTOPILOT:
-        if mode != 0: return osuModes(mode)
-        return osuModes(7)
-
-    return osuModes(mode)
+    @cached_property
+    def replay_path(self) -> str:
+        if self.value in (4, 5, 6): return RELAX_REPLAY_PATH
+        elif self.value in (0, 1, 2, 3): return VANILLA_REPLAY_PATH
+        else: return AUTOPILOT_REPLAY_PATH

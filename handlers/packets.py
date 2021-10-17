@@ -1,7 +1,7 @@
 from constants.privileges import Privileges
 from packets.reader import handle_packet
-from constants.osu_types import osuTypes
-from constants.modes import lbModes
+from constants.types import osuType
+from constants.modes import Mode
 from objects.player import Player
 from constants.mods import Mods
 from utils.logging import info
@@ -28,14 +28,14 @@ async def update_stats(p: Player, packet: bytes) -> None: return p.enqueue(userS
 
 @packet(Packets.OSU_USER_STATS_REQUEST, restricted_packet=True)
 async def stats_request(p: Player, packet: bytes) -> None:
-    user_ids = handle_packet(packet, (osuTypes.i32_list,))
+    user_ids = handle_packet(packet, (osuType.i32_list,))
 
     for user in glob.players.unrestricted:
         if user.id != p.id and user.id in user_ids: p.enqueue(userStats(user))
 
 @packet(Packets.OSU_USER_PRESENCE_REQUEST)
 async def presence_request(p: Player, packet: bytes) -> None:
-    user_ids = handle_packet(packet, (osuTypes.i32_list,))
+    user_ids = handle_packet(packet, (osuType.i32_list,))
 
     for user in glob.players.unrestricted:
         if user.id != p.id and user.id in user_ids: p.enqueue(userPresence(user))
@@ -47,7 +47,7 @@ async def full_presence_request(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_FRIEND_ADD)
 async def add_friend(p: Player, packet: bytes) -> None:
-    target = handle_packet(packet, (osuTypes.i32,))
+    target = handle_packet(packet, (osuType.i32,))
 
     if target in p.friends: return
     p.friends.append(target)
@@ -57,7 +57,7 @@ async def add_friend(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_FRIEND_REMOVE)
 async def remove_friend(p: Player, packet: bytes) -> None:
-    target = handle_packet(packet, (osuTypes.i32,))
+    target = handle_packet(packet, (osuType.i32,))
 
     if target not in p.friends: return
     p.friends.remove(target)
@@ -72,7 +72,7 @@ async def logout(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_SEND_PRIVATE_MESSAGE)
 async def send_dm(p: Player, packet: bytes) -> None:
-    msg_data = handle_packet(packet, (osuTypes.message,))
+    msg_data = handle_packet(packet, (osuType.message,))
 
     if not (target := glob.players.get(name=msg_data.target_username)): return
 
@@ -83,7 +83,7 @@ async def send_dm(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_SEND_PUBLIC_MESSAGE)
 async def send_msg(p: Player, packet: bytes) -> None:
-    msg_data = handle_packet(packet, (osuTypes.message,))
+    msg_data = handle_packet(packet, (osuType.message,))
 
     # TODO: handle multi
 
@@ -97,7 +97,7 @@ async def send_msg(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_CHANNEL_JOIN)
 async def join_channel(p: Player, packet: bytes) -> None:
-    channel_name = handle_packet(packet, (osuTypes.string,))
+    channel_name = handle_packet(packet, (osuType.string,))
 
     # TODO: handle multi
 
@@ -117,7 +117,7 @@ async def join_channel(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_CHANNEL_PART)
 async def leave_channel(p: Player, packet: bytes) -> None:
-    channel_name = handle_packet(packet, (osuTypes.string,))
+    channel_name = handle_packet(packet, (osuType.string,))
 
     # TODO: handle multi
 
@@ -142,12 +142,12 @@ async def action_update(p: Player, packet: bytes) -> None:
     action, action_info, map_md5, mods, mode, map_id = handle_packet(
         packet,
         (
-            osuTypes.u8,
-            osuTypes.string,
-            osuTypes.string,
-            osuTypes.u32,
-            osuTypes.u8,
-            osuTypes.i32
+            osuType.u8,
+            osuType.string,
+            osuType.string,
+            osuType.u32,
+            osuType.u8,
+            osuType.i32
         )
     )
 
@@ -158,7 +158,7 @@ async def action_update(p: Player, packet: bytes) -> None:
     p.action_info = action_info
     p.map_md5 = map_md5
     p.mods = Mods(mods)
-    p.mode = lbModes(mode, mods)
+    p.mode = Mode.from_lb(mode, mods)
     p.map_id = map_id
 
     if p.action == 2: p.action_info += " +" + repr(p.mods)
@@ -166,7 +166,7 @@ async def action_update(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_START_SPECTATING)
 async def start_spectating(p: Player, packet: bytes) -> None:
-    target_id = handle_packet(packet, (osuTypes.i32,))
+    target_id = handle_packet(packet, (osuType.i32,))
 
     if target_id == 1 or not (target := glob.players.get(id=target_id)): return
     target.add_spectator(p)
@@ -178,7 +178,7 @@ async def stop_spectating(p: Player, packet: bytes) -> None:
 
 @packet(Packets.OSU_SPECTATE_FRAMES)
 async def spectator_Frames(p: Player, packet: bytes) -> None:
-    frames = handle_packet(packet, (osuTypes.raw,))
+    frames = handle_packet(packet, (osuType.raw,))
     frames_packet = spectateFrames(frames)
     for u in p.spectators: u.enqueue(frames_packet)
 

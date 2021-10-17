@@ -112,7 +112,7 @@ async def login(request: Request) -> bytes:
 
     if player.country_iso.upper() == 'XX':
         player.country_iso = geoloc.country.iso_code.upper()
-        await glob.db.execute("UPDATE users SET country = %s WHERE id = %s", [player.country_iso.lower(), player.id])
+        await glob.sql.execute("UPDATE users SET country = %s WHERE id = %s", [player.country_iso.lower(), player.id])
 
     player.tourney_client = tourney_client
     if player.tourney_client and not player.priv & Privileges.Tourney:

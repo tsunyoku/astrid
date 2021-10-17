@@ -47,7 +47,7 @@ BEATMAP_API_URL = "https://old.ppy.sh/api/get_beatmaps"
 UNSUB_HEADER = b"-1|false"
 
 BASE_HEADER = (
-    "{map.status.value}|false|{map.id}|{map.sid}|{count}\n"
+    "{map.status}|false|{map.id}|{map.sid}|{count}\n"
     "0\n{map.full_name}\n0"
 )
 
@@ -57,5 +57,9 @@ DATA_FOLDER = Path.cwd() / ".data"
 AVATAR_FOLDER = DATA_FOLDER / "avatars"
 SCREENSHOT_FOLDER = DATA_FOLDER / "screenshots"
 DEFAULT_AVATAR = AVATAR_FOLDER / "default.png"
+MAPS_FOLDER = DATA_FOLDER / "maps"
+VANILLA_REPLAY_PATH = DATA_FOLDER / "replays"
+RELAX_REPLAY_PATH = DATA_FOLDER / "replays_rx"
+AUTOPILOT_REPLAY_PATH = DATA_FOLDER / "replays_ap"
 
 RANDOM_CHOICE = string.ascii_uppercase + string.ascii_lowercase + string.digits

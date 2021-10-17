@@ -25,3 +25,5 @@ bancho_username = ""
 bancho_password = "" # md5 form!!!
 
 bancho_api_key = "" # this is important, without this we cannot get any maps
+
+custom_clients = False # set to true if the server uses custom clients, this will effect the anticheat in numerous ways

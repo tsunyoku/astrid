@@ -2,7 +2,7 @@ import struct
 
 from enum import IntEnum
 
-from constants.osu_types import osuTypes
+from constants.types import osuType
 from objects import glob
 
 class Packets(IntEnum):
@@ -174,23 +174,23 @@ def write_channel(args: tuple) -> bytearray:
     return data
 
 _spec = {
-    osuTypes.i8: '<b',
-    osuTypes.u8: '<B',
-    osuTypes.i16: '<h',
-    osuTypes.u16: '<H',
-    osuTypes.i32: '<i',
-    osuTypes.u32: '<I',
-    osuTypes.f32: '<f',
-    osuTypes.i64: '<q',
-    osuTypes.u64: '<Q',
-    osuTypes.f64: '<d'
+    osuType.i8: '<b',
+    osuType.u8: '<B',
+    osuType.i16: '<h',
+    osuType.u16: '<H',
+    osuType.i32: '<i',
+    osuType.u32: '<I',
+    osuType.f32: '<f',
+    osuType.i64: '<q',
+    osuType.u64: '<Q',
+    osuType.f64: '<d'
 }
 
 _types = {
-    osuTypes.string: write_string,
-    osuTypes.i32_list: write_i32_list,
-    osuTypes.message: write_message,
-    osuTypes.channel: write_channel
+    osuType.string: write_string,
+    osuType.i32_list: write_i32_list,
+    osuType.message: write_message,
+    osuType.channel: write_channel
 }
 
 def write(packet_id, *args) -> bytes:
@@ -199,46 +199,46 @@ def write(packet_id, *args) -> bytes:
     )
 
     for _args, type in args:
-        if type == osuTypes.raw: data += _args
+        if type == osuType.raw: data += _args
         elif (func := _types.get(type)): data += func(_args)
         else: data += struct.pack(_spec[type], _args)
 
     data[3:3] = struct.pack("<I", len(data) - 3)
     return bytes(data)
 
-def userID(id: int) -> bytes: return write(Packets.CHO_USER_ID, (id, osuTypes.i32))
-def protocolVersion(version: int) -> bytes: return write(Packets.CHO_PROTOCOL_VERSION, (version, osuTypes.i32))
-def banchoPrivileges(privilege: int) -> bytes: return write(Packets.CHO_PRIVILEGES, (privilege, osuTypes.i32))
-def notification(msg: str) -> bytes: return write(Packets.CHO_NOTIFICATION, (msg, osuTypes.string))
+def userID(id: int) -> bytes: return write(Packets.CHO_USER_ID, (id, osuType.i32))
+def protocolVersion(version: int) -> bytes: return write(Packets.CHO_PROTOCOL_VERSION, (version, osuType.i32))
+def banchoPrivileges(privilege: int) -> bytes: return write(Packets.CHO_PRIVILEGES, (privilege, osuType.i32))
+def notification(msg: str) -> bytes: return write(Packets.CHO_NOTIFICATION, (msg, osuType.string))
 def channelInfoEnd() -> bytes: return write(Packets.CHO_CHANNEL_INFO_END)
-def restartServer(time: int) -> bytes: return write(Packets.CHO_RESTART, (time, osuTypes.i32))
-def menuIcon() -> bytes: return write(Packets.CHO_MAIN_MENU_ICON, ('|', osuTypes.string))
-def friends(friendsl) -> bytes: return write(Packets.CHO_FRIENDS_LIST, (friendsl, osuTypes.i32_list))
-def silenceEnd(unix: int) -> bytes: return write(Packets.CHO_SILENCE_END, (unix, osuTypes.i32))
-def sendMessage(fromname: str, msg: str, tarname: str, fromid: int) -> bytes: return write(Packets.CHO_SEND_MESSAGE, ((fromname, msg, tarname, fromid), osuTypes.message))
-def logout(uid: int) -> bytes: return write(Packets.CHO_USER_LOGOUT, (uid, osuTypes.i32), (0, osuTypes.u8))
+def restartServer(time: int) -> bytes: return write(Packets.CHO_RESTART, (time, osuType.i32))
+def menuIcon() -> bytes: return write(Packets.CHO_MAIN_MENU_ICON, ('|', osuType.string))
+def friends(friendsl) -> bytes: return write(Packets.CHO_FRIENDS_LIST, (friendsl, osuType.i32_list))
+def silenceEnd(unix: int) -> bytes: return write(Packets.CHO_SILENCE_END, (unix, osuType.i32))
+def sendMessage(fromname: str, msg: str, tarname: str, fromid: int) -> bytes: return write(Packets.CHO_SEND_MESSAGE, ((fromname, msg, tarname, fromid), osuType.message))
+def logout(uid: int) -> bytes: return write(Packets.CHO_USER_LOGOUT, (uid, osuType.i32), (0, osuType.u8))
 def blockDM() -> bytes: return write(Packets.CHO_USER_DM_BLOCKED)
-def spectatorJoined(uid: int) -> bytes: return write(Packets.CHO_FELLOW_SPECTATOR_JOINED, (uid, osuTypes.i32))
-def hostSpectatorJoined(uid: int) -> bytes: return write(Packets.CHO_SPECTATOR_JOINED, (uid, osuTypes.i32))
-def spectatorLeft(uid: int) -> bytes: return write(Packets.CHO_FELLOW_SPECTATOR_LEFT, (uid, osuTypes.i32))
-def hostSpectatorLeft(uid: int) -> bytes: return write(Packets.CHO_SPECTATOR_LEFT, (uid, osuTypes.i32))
-def spectateFrames(frames: bytes) -> bytes: return write(Packets.CHO_SPECTATE_FRAMES, (frames, osuTypes.raw))
-def channelJoin(chan: str) -> bytes: return write(Packets.CHO_CHANNEL_JOIN_SUCCESS, (chan, osuTypes.string))
-def channelInfo(chan) -> bytes: return write(Packets.CHO_CHANNEL_INFO, ((chan.name, chan.desc, chan.player_count), osuTypes.channel))
-def channelKick(chan: str) -> bytes: return write(Packets.CHO_CHANNEL_KICK, (chan, osuTypes.string))
+def spectatorJoined(uid: int) -> bytes: return write(Packets.CHO_FELLOW_SPECTATOR_JOINED, (uid, osuType.i32))
+def hostSpectatorJoined(uid: int) -> bytes: return write(Packets.CHO_SPECTATOR_JOINED, (uid, osuType.i32))
+def spectatorLeft(uid: int) -> bytes: return write(Packets.CHO_FELLOW_SPECTATOR_LEFT, (uid, osuType.i32))
+def hostSpectatorLeft(uid: int) -> bytes: return write(Packets.CHO_SPECTATOR_LEFT, (uid, osuType.i32))
+def spectateFrames(frames: bytes) -> bytes: return write(Packets.CHO_SPECTATE_FRAMES, (frames, osuType.raw))
+def channelJoin(chan: str) -> bytes: return write(Packets.CHO_CHANNEL_JOIN_SUCCESS, (chan, osuType.string))
+def channelInfo(chan) -> bytes: return write(Packets.CHO_CHANNEL_INFO, ((chan.name, chan.desc, chan.player_count), osuType.channel))
+def channelKick(chan: str) -> bytes: return write(Packets.CHO_CHANNEL_KICK, (chan, osuType.string))
 def versionUpdateForced() -> bytes: return write(Packets.CHO_VERSION_UPDATE_FORCED)
 
 def botPresence(player) -> bytes:
     return write(
         Packets.CHO_USER_PRESENCE,
-        (player.id, osuTypes.i32),
-        (player.name, osuTypes.string),
-        (player.utc_offset + 24, osuTypes.u8), # utc offset
-        (player.country, osuTypes.u8),
-        (31, osuTypes.u8),
-        (player.loc[0], osuTypes.f32), # long | off map cus bot
-        (player.loc[1], osuTypes.f32), # lat | off map cus bot
-        (0, osuTypes.i32)
+        (player.id, osuType.i32),
+        (player.name, osuType.string),
+        (player.utc_offset + 24, osuType.u8), # utc offset
+        (player.country, osuType.u8),
+        (31, osuType.u8),
+        (player.loc[0], osuType.f32), # long | off map cus bot
+        (player.loc[1], osuType.f32), # lat | off map cus bot
+        (0, osuType.i32)
     )
 
 def userPresence(player) -> bytes:
@@ -246,32 +246,32 @@ def userPresence(player) -> bytes:
 
     return write(
         Packets.CHO_USER_PRESENCE,
-        (player.id, osuTypes.i32),
-        (player.name, osuTypes.string),
-        (player.utc_offset + 24, osuTypes.u8),
-        (player.country, osuTypes.u8),
-        (player.client_priv.value | (player.mode_vn << 5), osuTypes.u8),
-        (player.loc[0], osuTypes.f32),
-        (player.loc[1], osuTypes.f32),
-        (player.current_stats.rank, osuTypes.i32)
+        (player.id, osuType.i32),
+        (player.name, osuType.string),
+        (player.utc_offset + 24, osuType.u8),
+        (player.country, osuType.u8),
+        (player.client_priv.value | (player.mode_vn << 5), osuType.u8),
+        (player.loc[0], osuType.f32),
+        (player.loc[1], osuType.f32),
+        (player.current_stats.rank, osuType.i32)
     )
 
 def botStats() -> bytes:
     return write(
         Packets.CHO_USER_STATS,
-        (1, osuTypes.i32),
-        (6, osuTypes.u8),
-        ('over astrid\'s code', osuTypes.string),
-        ('', osuTypes.string),
-        (0, osuTypes.i32),
-        (0, osuTypes.u8),
-        (0, osuTypes.i32),
-        (0, osuTypes.i64),
-        (0.00, osuTypes.f32),
-        (0, osuTypes.i32),
-        (0, osuTypes.i64),
-        (0, osuTypes.i32),
-        (0, osuTypes.i16)
+        (1, osuType.i32),
+        (6, osuType.u8),
+        ('over astrid\'s code', osuType.string),
+        ('', osuType.string),
+        (0, osuType.i32),
+        (0, osuType.u8),
+        (0, osuType.i32),
+        (0, osuType.i64),
+        (0.00, osuType.f32),
+        (0, osuType.i32),
+        (0, osuType.i64),
+        (0, osuType.i32),
+        (0, osuType.i16)
     )
 
 def userStats(player) -> bytes:
@@ -279,17 +279,17 @@ def userStats(player) -> bytes:
 
     return write(
         Packets.CHO_USER_STATS,
-        (player.id, osuTypes.i32),
-        (player.action, osuTypes.u8),
-        (player.action_info, osuTypes.string),
-        (player.map_md5, osuTypes.string),
-        (player.mods.value, osuTypes.i32),
-        (player.mode_vn, osuTypes.u8),
-        (player.map_id, osuTypes.i32),
-        (player.current_stats.rscore, osuTypes.i64),
-        (player.current_stats.acc / 100.0, osuTypes.f32),
-        (player.current_stats.pc, osuTypes.i32),
-        (player.current_stats.tscore, osuTypes.i64),
-        (player.current_stats.rank, osuTypes.i32),
-        (player.current_stats.pp, osuTypes.i16)
+        (player.id, osuType.i32),
+        (player.action, osuType.u8),
+        (player.action_info, osuType.string),
+        (player.map_md5, osuType.string),
+        (player.mods.value, osuType.i32),
+        (player.mode_vn, osuType.u8),
+        (player.map_id, osuType.i32),
+        (player.current_stats.rscore, osuType.i64),
+        (player.current_stats.acc / 100.0, osuType.f32),
+        (player.current_stats.pc, osuType.i32),
+        (player.current_stats.tscore, osuType.i64),
+        (player.current_stats.rank, osuType.i32),
+        (player.current_stats.pp, osuType.i16)
     )

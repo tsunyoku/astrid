@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-class osuTypes(IntEnum):
+class osuType(IntEnum):
     i8  = 0
     u8  = 1
     i16 = 2

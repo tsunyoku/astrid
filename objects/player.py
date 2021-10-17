@@ -1,15 +1,20 @@
+from typing import Optional, TYPE_CHECKING
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
 
 from constants.privileges import Privileges, ClientPrivileges
-from constants.modes import osuModes
-from objects.channel import Channel
+from .achievement import Achievement
+from constants.modes import Mode
 from constants.mods import Mods
 from utils.logging import info
-from objects.clan import Clan
+from .beatmap import Beatmap
+from .channel import Channel
 from packets import writer
 from objects import glob
+
+if TYPE_CHECKING:
+    from .score import Score
+    from .clan import Clan
 
 @dataclass
 class Stats:
@@ -23,6 +28,9 @@ class Stats:
     max_combo: int
     playtime: int
     grades: dict
+
+    def copy(self): # for efficient shallow-copying
+        return type(self)(**self.__dict__)
 
 class Player:
     def __init__(self, **kwargs) -> None:
@@ -48,7 +56,7 @@ class Player:
         self.action_info: str = ''
         self.map_md5: str = ''
         self.mods: Mods = Mods(0)
-        self.mode: osuModes = osuModes(0)
+        self.mode: Mode = Mode(0)
         self.map_id: int = 0
 
         self.stats: dict = {}
@@ -57,8 +65,8 @@ class Player:
         self.spectating: Optional['Player'] = None
         self.channels: list = []
         #self.match: Optional['Match'] = None
-        #self.last_np: Optional['Beatmap'] = None
-        #self.last_score: Optional['Score'] = None
+        self.last_np: Optional['Beatmap'] = None
+        self.last_score: Optional['Score'] = None
         self.clan: Optional['Clan'] = None
 
         self.last_ping: int = 0
@@ -159,7 +167,7 @@ class Player:
         info(f"{self.name} logged out.")
 
     async def set_stats(self) -> None:
-        for mode in osuModes:
+        for mode in Mode:
             stat = await glob.sql.fetchrow(
                 'SELECT rscore_{0} rscore, acc_{0} acc, pc_{0} pc, '
                 'tscore_{0} tscore, pp_{0} pp, mc_{0} max_combo, '
@@ -182,14 +190,14 @@ class Player:
 
             self.stats[mode.value] = Stats(**stat)
 
-    async def get_rank(self, mode: osuModes, pp: int) -> int:
+    async def get_rank(self, mode: Mode, pp: int) -> int:
         if self.disallowed: return 0
 
         redis_rank = await glob.redis.zrevrank(f'astrid:leaderboard:{mode.name}', self.id)
         if redis_rank is None: return 1 if pp > 0 else 0
         else: return redis_rank + 1
 
-    async def get_country_rank(self, mode: osuModes, pp: int) -> int:
+    async def get_country_rank(self, mode: Mode, pp: int) -> int:
         if self.disallowed: return 0
 
         redis_rank = await glob.redis.zrevrank(f'astrid:leaderboard:{mode.name}:{self.country_iso}', self.id)
@@ -292,7 +300,50 @@ class Player:
 
         self.enqueue(writer.hostSpectatorLeft(user.id))
         info(f"{user.name} stopped spectating {self.name}")
-        
+
+    async def recalc_stats(self) -> None:
+        all_scores = await glob.sql.fetch(
+            f"SELECT pp, acc FROM {self.mode.table} t RIGHT JOIN maps ON t.md5 = maps.md5 "
+            "WHERE t.status = 2 AND maps.status IN (2, 3) AND uid = %s "
+            "ORDER BY pp DESC",
+            [self.id]
+        )
+
+        if not all_scores: return
+
+        top_100 = all_scores[:100] # yes
+
+        # NO other server has done this correctly wtf
+        weighted_acc = sum(row['acc'] * 0.95 ** i for i, row in enumerate(top_100))
+        bonus_acc = 100.0 / (20 * (1 - 0.95 ** len(top_100))) # bonus ?
+        self.current_stats.acc = (weighted_acc * bonus_acc) / 100
+
+        weighted_pp = sum(row['pp'] * 0.95 ** i for i, row in enumerate(all_scores))
+        bonus_pp = 416.6667 * (1 - 0.9994 ** len(all_scores))
+        self.current_stats.pp = round(weighted_pp + bonus_pp)
+
+    async def update_stats(self) -> None:
+        new_stats = writer.userStats(self)
+        self.enqueue(new_stats)
+        if not self.restricted: glob.players.enqueue(new_stats)
+
+        await glob.sql.execute(
+            'UPDATE stats SET rscore_{0} = %s, acc_{0} = %s, pc_{0} = %s, tscore_{0} = %s, '
+            'pp_{0} = %s, mc_{0} = %s, pt_{0} = %s WHERE id = %s'.format(self.mode.name),
+            [self.current_stats.rscore, self.current_stats.acc, self.current_stats.pc, self.current_stats.tscore,
+             self.current_stats.pp, self.current_stats.max_combo, self.current_stats.playtime, self.id]
+        )
+
+        await glob.redis.zadd(f"astrid:leaderboard:{self.mode.name}", self.current_stats.pp, self.id)
+        await glob.redis.zadd(f"astrid:leaderboard:{self.mode.name}:{self.country_iso}", self.current_stats.pp, self.id)
+
+    async def unlock_achievement(self, achievement: Achievement) -> None:
+        await glob.db.execute(
+            f"INSERT INTO user_achievements (uid, ach) VALUES (%s, %s)",
+            [self.id, achievement.id]
+        )
+
+        self.achievements.append(achievement)
 
         
 
