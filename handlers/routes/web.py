@@ -241,7 +241,7 @@ async def score_sub(request: Request) -> bytes:
     if score.map.gives_pp and not (
         score.user.priv & Privileges.Whitelisted or score.user.restricted
     ): # pp cap if the map gives pp and they cant bypass the cap (and also are not restricted)
-        pp_cap = 1000000000
+        pp_cap = glob.config.pp_caps[score.mode.value]
 
         if score.pp >= pp_cap: await score.user.restrict(f"Exceeding {score.mode!r} pp cap ({score.pp:,.0f}pp) on {score.map.full_name} +{score.mods!r}")
 
