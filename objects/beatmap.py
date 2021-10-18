@@ -43,7 +43,7 @@ class Beatmap:
     def set_url(self) -> str: return f"https://osu.{glob.config.serving_domain}/beatmapsets/{self.sid}"
 
     @property
-    def embed(self) -> str: return f"[{self.url} {self.name}]"
+    def embed(self) -> str: return f"[{self.url} {self.full_name}]"
 
     @property
     def has_leaderboard(self) -> bool: return self.status >= mapStatus.Ranked
